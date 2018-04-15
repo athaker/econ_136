@@ -9,6 +9,8 @@ Linux: wget https://github.com/athaker/econ_136_2018/archive/master.zip
 ## 2. Installing and Running Locally
 ### Requirements
 Pandas, Tensorflow >= 1.4, Numpy
+
+Everything should be pip installable. 
 ### Run
 To run a [Jupyter Notebook](http://jupyter.org/) simply run the command: ```jupyter notebook pres_election_2016.ipynb```
 
