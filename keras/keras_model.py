@@ -76,3 +76,37 @@ market_data = market_data.set_index(data.index)  # this operation is not inplace
 frames = [data, market_data]  # Pandas has some quirks unlike sql when concatenating
 combined_df = pd.concat(frames, axis=1)  # Axis 0 is after, 1 is next-to
 
+
+
+# our goal is to predict the party that will win the election
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.optimizers import RMSprop, Adam, SGD
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Softmax
+from sklearn.model_selection import train_test_split
+
+X = combined_df[['party', 'prev_held_office', 'previous_party_1',
+       'previous_party_2', 'was_vp_or_vp_runner', 'day_before_1',
+       'day_before_7', 'day_before_30', 'day_before_60', 'day_before_180',
+       'day_before_365', 'day_before_730']]
+y = combined_df[["party", "day_after_1", 'day_after_60', "day_after_365"]]
+
+#X_train,  X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+X_train = X.iloc[:-1]
+y_train = y.iloc[:-1]
+X_test  = X.iloc[-1:]
+y_test  = y.iloc[-1:]
+
+sgd = SGD(lr=0.01, momentum=0.9, nesterov=True)
+model = Sequential()
+model.add(Dense(10, input_dim=len(X.columns)))
+model.add(Activation("relu"))
+model.add(Dense(4))
+model.add(Flatten())
+
+
+model.compile(loss="mean_squared_error",optimizer=sgd,metrics=["mae"])
+hist = model.fit(X_train, y_train, epochs=400, verbose=1, validation_split=0.2)
+scores = model.evaluate(X_test, y_test)
+print(model.predict(X_test[0:5]))
+print(y_test[0:5])
