@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="64220df8-b4c9-407a-b830-0f7f5cbaf67f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../MLADS/data.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MLADS/djw.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MLADS/pres_election_2016.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../archived_lectures/2018/resources/pres_election_2016.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../archived_lectures/2018/resources/pres_election_2016.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keras_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/keras_model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +20,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pres_election_2016.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-955">
-              <caret line="116" lean-forward="true" selection-start-line="78" selection-end-line="116" />
+            <state relative-caret-position="-1681">
+              <caret line="192" column="9" lean-forward="true" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
               <folding>
                 <element signature="e#1772#1781#0" expanded="true" />
               </folding>
@@ -34,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/keras_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1170">
-              <caret line="78" selection-start-line="78" selection-end-line="78" />
+            <state relative-caret-position="224">
+              <caret line="108" column="46" selection-start-line="108" selection-start-column="46" selection-end-line="108" selection-end-column="46" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
@@ -69,7 +67,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="640" />
     <option name="height" value="720" />
@@ -100,7 +98,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -114,7 +112,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.pres_election_2016">
+  <component name="RunManager" selected="Python.keras_model">
     <configuration name="keras" type="JupiterNotebook" factoryName="Jupyter Notebook">
       <module name="keras" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -131,6 +129,25 @@
       <option name="additionalOptions" value="" />
       <option name="ipnbHost" value="127.0.0.1" />
       <option name="ipnbPort" value="8888" />
+      <method v="2" />
+    </configuration>
+    <configuration name="keras_model" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="keras" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/keras_model.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="pres_election_2016" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -157,6 +174,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.keras_model" />
+        <item itemvalue="Python.keras_model" />
+        <item itemvalue="Python.keras_model" />
         <item itemvalue="Python.pres_election_2016" />
       </list>
     </recent_temporary>
@@ -169,17 +189,17 @@
       <option name="presentableId" value="Default" />
       <updated>1545291820251</updated>
       <workItem from="1545291824336" duration="55000" />
-      <workItem from="1545291913465" duration="3113000" />
+      <workItem from="1545291913465" duration="3284000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3168000" />
+    <option name="totallyTimeSpent" value="3339000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="640" height="720" extended-state="0" />
+    <frame x="0" y="23" width="1280" height="720" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25083613" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12116317" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -193,7 +213,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="10" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.32961783" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="11" visible="true" weight="0.32961783" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -217,8 +237,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pres_election_2016.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-955">
-          <caret line="116" lean-forward="true" selection-start-line="78" selection-end-line="116" />
+        <state relative-caret-position="-1681">
+          <caret line="192" column="9" lean-forward="true" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
           <folding>
             <element signature="e#1772#1781#0" expanded="true" />
           </folding>
@@ -227,8 +247,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/keras_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="78" selection-start-line="78" selection-end-line="78" />
+        <state relative-caret-position="224">
+          <caret line="108" column="46" selection-start-line="108" selection-start-column="46" selection-end-line="108" selection-end-column="46" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
           </folding>
