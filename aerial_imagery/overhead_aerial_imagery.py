@@ -1,21 +1,3 @@
-"""
-import tensorflow as tf
-import numpy as np
-import tensorflow.keras
-from tensorflow.keras import backend as K
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.metrics import categorical_crossentropy
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.layers.normalization import BatchNormalization
-from tensorflow.keras.layers.convolutional import *
-from sklearn.metrics import confusion_matrix
-import itertools
-import matplotlib.pyplot as plt
-"""
-
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import pandas as pd
@@ -97,9 +79,7 @@ from tensorflow.keras.layers import Input, Embedding, LSTM, Dense
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Softmax
 from tensorflow.keras.optimizers import RMSprop, Adam, SGD
 from tensorflow.keras.layers import Concatenate, Average
-
-
-
+from tensorflow.keras.layers import Activation
 
 
 picture_input = Input(shape=(64,64,3), dtype="float32", name="picture_input")
@@ -111,56 +91,30 @@ hidden_2 = MaxPooling2D(pool_size=(2,2))(hidden_1)
 hidden_3 = Dropout(0.25)(hidden_2)
 flatten_layer = Flatten()(hidden_3)
 dd = Dense(10)(flatten_layer)
+act = Activation("relu")(dd)
 
 
-merged = Average()([dd, ddd])
-dense = Dense(1)(merged)
+merged = Concatenate()([act, ddd])
+act2 = Activation("relu")(merged)
+dense = Dense(1)(act2)
 model = Model(inputs=[picture_input, ts_input], outputs=dense)
 
 sgd = SGD(lr=0.01, momentum=0.9, nesterov=True)
 model.compile(loss='mean_squared_error', metrics=['accuracy', 'mae'], optimizer=sgd)
 # binary_crossentropy
 
-hist = model.fit([img_arrs, df[["direction_before_14", "direction_before_30"]].values], np.array(df["direction_after_30"].to_list()), epochs=50, verbose=1, validation_split=0.2)
+hist = model.fit([img_arrs, df[["direction_before_14", "direction_before_30"]].values], np.array(df["direction_after_30"].to_list()), epochs=50, verbose=1, validation_split=0.4)
+
+
+# todo update so you pick insample and out of sample
+# todo see if keras validation set allows for you to pick the first or last
+# Correct. The validation data is picked as the last 10%
+
+# now need to get metrics about the performance of the model
 
 #from tensorflow.keras.utils import plot_model
+#plot_model(model, to_file='model.png')
 
-#plot_model(model)
-import matplotlib.pyplot as plt
-
-"""
-
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(100, 100, 3)))
-model.add(Conv2D(32, (3, 3), activation='relu'))df.direction_before_20.to_list()
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='same',
-                 input_shape=(32,32,3)))
-model.add(Activation('relu'))
-model.add(Conv2D(32, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Conv2D(64, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(64, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Flatten())
-model.add(Dense(512))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
-model.compile(optimizers.rmsprop(lr=0.0001, decay=1e-6),loss="categorical_crossentropy",metrics=["accuracy"])
-
-
-
-ts_input = Input(shape=)
-
-"""
 
 #datagen = ImageDataGenerator(rescale=1./255)
 #data_generator = datagen.flow_from_directory(
