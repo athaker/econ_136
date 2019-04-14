@@ -2,8 +2,8 @@
 This repository includes materials for Gary R Evans Econ 136 class. 
 
 ## 1. Getting Started - Lecture 2019
-1. Download or clone the files in the repository to your local machine. (Green button top right). You specfically need the 3 files in the MLADS folder.
-2. Decide if you want to run locally (step 2), or run online Jupyter notebook (DSVM). 
+1. Download or clone the files in the repository to your local machine. (Green button top right). 
+2. Decide if you want to run locally (step 2), or run online with Colab. 
 
 
 ## 2. Running Online
