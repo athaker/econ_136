@@ -1,6 +1,8 @@
 # Predicting Wheat Futures with Aerial Imagery
 This repository includes materials for Gary R Evans Econ 136 class. 
 
+The most recent lecture can be found in the 2019 folder within archived_lectures.
+
 ## 1. Getting Started - Lecture 2019
 1. Download or clone the files in the repository to your local machine. (Green button top right). 
 2. Decide if you want to run locally (step 2), or run online with Colab. 
