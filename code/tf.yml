@@ -1,0 +1,12 @@
+name: tf
+
+dependencies:
+  - python=3.7
+  - pandas
+  - tensorflow
+  - matplotlib
+  - scikit-learn
+  - jupyter
+  - pip
+    - pydot
+# conda install -c anaconda pydot
