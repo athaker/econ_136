@@ -1,5 +1,5 @@
 # Deep Learning for Timeseries
-This repository includes materials for a lecture for Gary Evans 136 Class. 
+This repository includes materials for a lecture originally for Gary Evans 136 Class, this has been modified for Prof Gu's AIML 71 Class. 
 
 ## 1. Getting Started
 1. Download or clone the files in the the repository to your local machine. (Green button top right). 
