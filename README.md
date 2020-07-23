@@ -1,7 +1,7 @@
-# Deep Learning for Timeseries - Lecture 2018
+# Deep Learning for Timeseries
 This repository includes materials for a lecture for Gary Evans 136 Class. 
 
-## 1. Getting Started - Lecture 2018
+## 1. Getting Started
 1. Download or clone the files in the the repository to your local machine. (Green button top right). 
 2. Decide if you want to run locally (step 2), or run in an online Jupyter notebook (step 3 - recommended). 
 
