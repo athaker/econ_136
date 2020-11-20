@@ -9,7 +9,7 @@ The most recent lecture can be found in the [powerpoint presentation](https://gi
 
 
 ## 2. Running Online
-The suggested environment is [Google Colab](https://colab.research.google.com), as Prof Evans mentioned this will allow you to have a GPU (likely a Tesla K80) for free, and more quickly run your experiments. 
+The suggested environment is [Google Colab](https://colab.research.google.com),  this will allow you to have a GPU (likely a Tesla K80) for free, and more quickly run your experiments. 
 1. Open: https://colab.research.google.com
 2. Upload Notebook: File -> Upload Notebook, and upload the notebook _aerial_imagery/overhead_aerial_imagery.ipynb_. 
 3. (OPTIONAL) Start an accelerated runtime: Runtime -> Change Runtime Type -> Hardware accelerator -> GPU
