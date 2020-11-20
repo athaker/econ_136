@@ -1,9 +1,9 @@
 # Predicting Wheat Futures with Aerial Imagery
-This repository includes materials for Gary R Evans Econ 136 class. 
+This repository includes materials for an introduction to trading with 3rd party datasets. 
 
-The most recent lecture can be found in the 2019 folder within archived_lectures.
+The most recent lecture can be found in the [powerpoint presentation](https://github.com/athaker/econ_136/blob/master/phxdata20/phxdata20_avi_thaker_aerial_imagery-2020-11-20.pdf)
 
-## 1. Getting Started - Lecture 2019
+## 1. Getting Started
 1. Download or clone the files in the repository to your local machine. (Green button top right). 
 2. Decide if you want to run locally (step 2), or run online with Colab. 
 
@@ -25,6 +25,6 @@ Pandas, Tensorflow >= 1.13, Numpy
 
 Everything should be pip installable. 
 ### Run
-To run a [Jupyter Notebook](http://jupyter.org/) simply run the command: ```jupyter notebook pres_election_2016.ipynb```
+To run a [Jupyter Notebook](http://jupyter.org/) simply run the command: ```jupyter notebook overhead_aerial_imagery.ipynb```
 
 A [Jupyter Notebook (IPython Kernel)](http://jupyter.org/) is a web based interactive compute environment featuring [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop). This makes iterative learning quick and easy!
