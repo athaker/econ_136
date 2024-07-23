@@ -79,10 +79,10 @@ if __name__ == "__main__":
         "3-6_month_market_direction",
         "6-12_month_market_direction",
         "12-18_month_direction",
-        # "1_after",
+        "party",
     ]
 
-    label = "party"  # Replace with your actual label column
+    label = "1_after"  # Replace with your actual label column
 
     # Now to features we need to put stock market data from djw.csv
     # We will use the closing value of the Dow Jones World Index
@@ -138,11 +138,12 @@ if __name__ == "__main__":
     # Now we want to predict the very last row in the test set
     inputs, targets = test_dataset[-1]
     inputs = inputs.unsqueeze(0)
+    inputs[torch.isnan(inputs)] = 0
     outputs = model(inputs)
     print(f"Predicted: {outputs.item()}, Actual: {targets.item()}")
     if outputs.item() > 0.5:
-        print("Predicted: Republican")
+        print("Predicted: up")
     else:
-        print("Predicted: Democratic")
+        print("Predicted: down")
 
     # Now do the same training but include the expected winner as a feature and predict the market direction for the next month
