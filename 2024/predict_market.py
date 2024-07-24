@@ -80,6 +80,7 @@ if __name__ == "__main__":
         "6-12_month_market_direction",
         "12-18_month_direction",
         "party",
+        "sentiment",
     ]
 
     label = "1_after"  # Replace with your actual label column

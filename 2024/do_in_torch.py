@@ -79,6 +79,7 @@ if __name__ == "__main__":
         "3-6_month_market_direction",
         "6-12_month_market_direction",
         "12-18_month_direction",
+        "sentiment",
         # "1_after",
     ]
 
