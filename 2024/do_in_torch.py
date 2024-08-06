@@ -9,6 +9,9 @@ from torch.optim import Adam
 import numpy as np
 
 
+torch.manual_seed(0)  # set seed for reproducability
+
+
 # Define Dataset Class
 class ElectionDataset(Dataset):
     def __init__(self, dataframe, features, labels):
@@ -27,21 +30,26 @@ class ElectionDataset(Dataset):
 
 # Function to compute percentage change
 def compute_td_pct(djw, index, days):
-    ntd = djw.truncate(after=index).iloc[-1]["Closing Value"]
+    """
+    Computes the percent return of `djw ` for a specified number of`days` before
+    the passed in `index` date being very careful to never choose a future date
+    that could create a forward looking bias
+    """
+    if (index + timedelta(days=1)) > djw.index[-1]:
+        return 0
+
+    ntd = djw.truncate(after=index).iloc[-1]["close"]
+
     if days > 0:
-        pct = (
-            djw[index : index + timedelta(days=1)].iloc[-1]["Closing Value"] - ntd
-        ) / djw[index : index + timedelta(days=days)].iloc[-1]["Closing Value"]
+        n_days_after = djw[index : index + timedelta(days=days)].iloc[-1]["close"]
+        pct = (n_days_after - ntd) / n_days_after
     else:
-        pct = (
-            ntd - djw[index + timedelta(days=days) : index].iloc[0]["Closing Value"]
-        ) / ntd
-    return pct, 1 if pct > 0 else 0
+        n_days_before_price = djw[index + timedelta(days=days) : index].iloc[0]["close"]
+        pct = (ntd - n_days_before_price) / ntd
+    return pct
 
 
-# Add a picture of what the neural network looks like
-# TL;dr this is a fully connected neural network with 3 hidden layers
-# put in shaply feature attribution map
+# TODO: shaply feature attribution map
 
 
 # Define a simple neural network
@@ -61,52 +69,10 @@ class DNNRegressor(nn.Module):
         return x
 
 
-if __name__ == "__main__":
-    # Load and prepare data
-    djw = pd.read_csv("djw.csv")
-    djw.set_index(pd.to_datetime(djw["date"]), inplace=True)
-    data = pd.read_csv("output_data.csv")
-    data.set_index(pd.to_datetime(data["date_elected"]), inplace=True)
-    # data.dropna(inplace=True)
-
-    # Create features and labels
-    features = [
-        "prev_held_office_democratic",
-        "prev_held_office_republican",
-        "previous_party_1",
-        "previous_party_2",
-        "previous_party_3",
-        "3-6_month_market_direction",
-        "6-12_month_market_direction",
-        "12-18_month_direction",
-        "sentiment",
-        # "1_after",
-    ]
-
-    label = "party"  # Replace with your actual label column
-
-    # Now to features we need to put stock market data from djw.csv
-    # We will use the closing value of the Dow Jones World Index
-    features_closing_diffs = []
-
-    # encode each month return before the election, for election not done yet use 0
-    # do 1 year as another feature too
-    # do 1, 5, 7 , 1 month after election prediction
-
-    # Split data into training and test sets
-    train_size = int(0.99 * len(data))
-    train_set, test_set = data[:train_size], data[train_size:]
-
-    # Create datasets
-    train_dataset = ElectionDataset(train_set, features, label)
-    test_dataset = ElectionDataset(test_set, features, label)
-
-    # Data loaders
-    train_loader = DataLoader(train_dataset, batch_size=10, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False)
-
+def run_model(train_loader, test_loader):
     # Model, loss, and optimizer
     model = DNNRegressor(input_size=len(features))
+
     criterion = nn.MSELoss()
     optimizer = Adam(model.parameters(), lr=0.001)
 
@@ -122,28 +88,115 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
-        # Print epoch loss
-        print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item()}")
-
     # Evaluate the model
     model.eval()
     total_loss = 0
     with torch.no_grad():
         for inputs, targets in test_loader:
             outputs = model(inputs)
-            print(outputs)
             loss = criterion(outputs, targets.view(-1, 1))
             total_loss += loss.item()
-    print(f"Test Loss: {total_loss / len(test_loader)}")
+    return model
+
+
+if __name__ == "__main__":
+    # Load and prepare data
+    djw = pd.read_csv("djw.csv")
+    djw.set_index(pd.to_datetime(djw["date"]), inplace=True)
+    data = pd.read_csv("output_data.csv")
+    data.set_index(pd.to_datetime(data["date_elected"]), inplace=True)
+
+    # Create features
+    features = [
+        "prev_held_office_democratic",
+        "prev_held_office_republican",
+        "previous_party_1",
+        "previous_party_2",
+        "previous_party_3",
+        "3-6_month_market_direction",
+        "6-12_month_market_direction",
+        "12-18_month_direction",
+        "sentiment",
+        "day_before_7",
+        "day_before_30",
+        "day_before_150",
+        "day_before_210",
+        "day_before_365",
+    ]
+
+    # encode stock pct returns leading up to election
+    day_before_7 = []
+    day_before_30 = []
+    day_before_150 = []
+    day_before_210 = []
+    day_before_365 = []
+    for index, row in data.iterrows():
+        day_before_7.append(compute_td_pct(djw, index, -7))
+        day_before_30.append(compute_td_pct(djw, index, -30))
+        day_before_150.append(compute_td_pct(djw, index, -150))
+        day_before_210.append(compute_td_pct(djw, index, -210))
+        day_before_365.append(compute_td_pct(djw, index, -365))
+
+    data["day_before_7"] = day_before_7
+    data["day_before_30"] = day_before_30
+    data["day_before_150"] = day_before_150
+    data["day_before_210"] = day_before_210
+    data["day_before_365"] = day_before_365
+
+    label = "party"  # what we will predict
+
+    # Split data into training and test sets
+    train_size = int(0.99 * len(data))
+    train_set, test_set = data[:train_size], data[train_size:]
+
+    # Create datasets
+    train_dataset = ElectionDataset(train_set, features, label)
+    test_dataset = ElectionDataset(test_set, features, label)
+
+    # Data loaders
+    train_loader = DataLoader(train_dataset, batch_size=10, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False)
+
+    # run the training loop and evaluate the model
+    model = run_model(train_loader, test_loader)
 
     # Now we want to predict the very last row in the test set
     inputs, targets = test_dataset[-1]
     inputs = inputs.unsqueeze(0)
     outputs = model(inputs)
-    print(f"Predicted: {outputs.item()}, Actual: {targets.item()}")
+    print(f"Predicted: {outputs.item()}")
     if outputs.item() > 0.5:
         print("Predicted: Republican")
+        data.iloc[-1] = 1.0
     else:
         print("Predicted: Democratic")
+        data.iloc[-1] = 0.0
+
+    torch.onnx.export(model, inputs, "party_model.onnx")
 
     # Now do the same training but include the expected winner as a feature and predict the market direction for the next month
+    features.append("party")
+    label = "1_after"  # this time we will predict market direction, up or down
+
+    # set up the datasets again with the new feature and label
+    train_set, test_set = data[:train_size], data[train_size:]
+    train_dataset = ElectionDataset(train_set, features, label)
+    test_dataset = ElectionDataset(test_set, features, label)
+    train_loader = DataLoader(train_dataset, batch_size=10, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False)
+
+    # run the training loop and evaluate the model
+    model = run_model(train_loader, test_loader)
+
+    # Now we want to predict the very last row in the test set
+    inputs, targets = test_dataset[-1]
+    inputs = inputs.unsqueeze(0)
+    outputs = model(inputs)
+    print(f"Predicted: {outputs.item()}")
+    if outputs.item() > 0.5:
+        print("Predicted: up")
+        data.iloc[-1] = 1.0
+    else:
+        print("Predicted: down")
+        data.iloc[-1] = 0.0
+    torch.onnx.export(model, inputs, "market_model.onnx")
