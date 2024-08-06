@@ -195,8 +195,6 @@ if __name__ == "__main__":
     print(f"Predicted: {outputs.item()}")
     if outputs.item() > 0.5:
         print("Predicted: up")
-        data.iloc[-1] = 1.0
     else:
         print("Predicted: down")
-        data.iloc[-1] = 0.0
     torch.onnx.export(model, inputs, "market_model.onnx")
