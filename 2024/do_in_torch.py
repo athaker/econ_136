@@ -167,10 +167,10 @@ if __name__ == "__main__":
     print(f"Predicted: {outputs.item()}")
     if outputs.item() > 0.5:
         print("Predicted: Republican")
-        data.iloc[-1] = 1.0
+        data.loc[data.index[-1], "party"] = 1.0
     else:
         print("Predicted: Democratic")
-        data.iloc[-1] = 0.0
+        data.loc[data.index[-1], "party"] = 0.0
 
     torch.onnx.export(model, inputs, "party_model.onnx")
 
