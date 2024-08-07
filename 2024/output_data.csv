@@ -1,32 +1,32 @@
-date_elected,party,prev_held_office_democratic,prev_held_office_republican,previous_party_1,previous_party_2,previous_party_3,Winner,Loser,Winner's Party,Loser's Party,3-6_month_market_direction,6-12_month_market_direction,12-18_month_direction,1_after,3-6_month_performance,6-12_month_performance,12-18_month_performance,1_after,sentiment
-11/8/04,1,0,1,1,1,0,Theodore Roosevelt,Alton B. Parker,Republican,Democratic,1,1,0,1,0.082679372,0.152849741,-0.313759108,0.01384083,0.481465994
-11/3/08,1,0,1,1,1,1,William Howard Taft,William Jennings Bryan,Republican,Democratic,1,1,0,1,0.161776213,0.197945845,-0.324983943,0.02026701,0.834656466
-11/5/12,0,0,1,1,1,1,Woodrow Wilson,Theodore Roosevelt,Democratic,Progressive,1,1,0,0,0.027738819,0.123725592,-0.057297652,-0.044097996,0.445450128
-11/7/16,0,1,0,0,1,1,Woodrow Wilson,Charles Evans Hughes,Democratic,Republican,0,0,1,0,-0.016378929,-0.046228448,0.455703977,-0.003744267,0.106471984
-11/2/20,1,0,0,0,0,1,Warren G. Harding,James M. Cox,Republican,Democratic,0,0,1,0,-0.096564926,-0.218023742,0.261081654,-0.090481233,0.710260543
-11/4/24,1,0,1,1,0,0,Calvin Coolidge,John W. Davis,Republican,Democratic,1,1,0,1,0.119809173,0.0258476,-0.079606625,0.061364285,0.523301399
-11/6/28,1,0,0,1,1,0,Herbert Hoover,Al Smith,Republican,Democratic,0,1,1,1,-0.006696734,0.14215249,0.117009234,0.073308271,0.43361317
-11/8/32,0,0,0,1,1,1,Franklin D. Roosevelt,Herbert Hoover,Democratic,Republican,1,0,0,0,0.187061711,-0.503039644,-0.251343825,-0.02626885,0.213609915
-11/3/36,0,1,0,0,1,1,Franklin D. Roosevelt,Alf Landon,Democratic,Republican,1,1,1,1,0.124931954,0.037853548,0.277943705,0.003487214,0.2803542
-11/5/40,0,1,0,0,0,1,Franklin D. Roosevelt,Wendell Willkie,Democratic,Republican,0,0,1,0,-0.141790538,-0.025815397,0.158895566,-0.015305349,0.04798312
-11/7/44,0,1,0,0,0,0,Franklin D. Roosevelt,Thomas E. Dewey,Democratic,Republican,1,1,0,1,0.048106744,0.054602066,-0.014788373,0.011591649,0.454571022
-11/2/48,0,1,0,0,0,0,Harry S. Truman,Thomas E. Dewey,Democratic,Republican,1,0,1,0,0.000220885,-0.012975636,0.052061113,-0.048503782,0.682225162
-11/4/52,1,0,0,0,0,0,Dwight D. Eisenhower,Adlai Stevenson,Republican,Democratic,1,1,0,1,0.070084882,0.003041269,-0.01217795,0.038075931,0.657927848
-11/6/56,1,0,1,1,0,0,Dwight D. Eisenhower,Adlai Stevenson,Republican,Democratic,1,1,1,1,0.001930238,0.097454205,0.102656663,0.0032373,0.84265882
-11/8/60,0,0,0,1,1,0,John F. Kennedy,Richard Nixon,Democratic,Republican,1,0,1,1,0.012033318,-0.066521231,0.047573066,0.004848485,0.226130736
-11/3/64,0,1,0,0,1,1,Lyndon B. Johnson,Barry Goldwater,Democratic,Republican,1,1,1,0,0.020052681,0.090600892,0.049646279,-0.003467533,0.23885073
-11/5/68,1,0,0,0,0,1,Richard Nixon,Hubert Humphrey,Republican,Democratic,0,1,0,1,-0.045925229,0.074734885,-0.054461566,0.029721845,0.466823311
-11/7/72,1,1,0,1,0,0,Richard Nixon,George McGovern,Republican,Democratic,1,1,0,1,0.016292758,0.123803042,-0.103076939,0.050338504,0.734969899
-11/2/76,0,0,0,1,1,0,Jimmy Carter,Gerald Ford,Democratic,Republican,0,1,0,0,-0.008138783,0.207249431,-0.014661512,-0.010339456,0.305051967
-11/4/80,1,0,1,0,1,1,Ronald Reagan,Jimmy Carter,Republican,Democratic,1,0,0,1,0.140585569,-0.002104279,-0.03374472,0.018171136,0.853500925
-11/6/84,1,1,0,1,0,1,Ronald Reagan,Walter Mondale,Republican,Democratic,1,0,0,0,0.031202853,-0.040770801,-0.011601587,-0.050866836,0.873562832
-11/8/88,1,0,1,1,1,0,George H. W. Bush,Michael Dukakis,Republican,Democratic,1,1,0,1,0.055098005,0.05644669,-0.156418206,0.011079953,0.879627316
-11/3/92,0,0,0,1,1,1,Bill Clinton,George H. W. Bush,Democratic,Republican,1,1,1,1,0.005121222,0.095376311,0.039978087,0.016599442,0.368827798
-11/5/96,0,1,0,0,1,1,Bill Clinton,Bob Dole,Democratic,Republican,1,1,1,1,0.038425712,0.137934903,0.11101211,0.041988051,0.057201128
-11/7/00,1,0,0,0,0,1,George W. Bush,Al Gore,Republican,Democratic,1,0,0,0,0.024838664,-0.013153463,-0.029652117,-0.026560778,0.697828095
-11/2/04,1,0,1,1,0,0,George W. Bush,John Kerry,Republican,Democratic,0,1,1,1,-0.013073492,0.037238068,0.141964981,0.044201222,0.716379608
-11/4/08,0,0,0,1,1,0,Barack Obama,John McCain,Democratic,Republican,0,0,1,0,-0.129949867,-0.035825568,0.024914396,-0.083489163,0.094580171
-11/6/12,0,1,0,0,1,1,Barack Obama,Mitt Romney,Democratic,Republican,1,1,0,1,0.00837758,0.080365318,-0.051864347,0.010926541,0.684435291
-11/8/16,1,0,0,0,0,1,Donald Trump,Hillary Clinton,Republican,Democratic,1,1,0,1,0.046503117,0.000572461,-0.015435012,0.055144545,0.753409071
-11/3/20,0,0,1,1,0,0,Joe Biden,Donald Trump,Democratic,Republican,1,0,1,1,0.122722924,-0.136130108,0.03178312,0.076195271,0.259129553
-11/5/24,,0,1,0,1,0,Kamala Harris,Donald Trump,,,1,1,1,0,0.012676737,0.13432188,0.011490635,,0.43134124
+date_elected,party,prev_held_office_democratic,prev_held_office_republican,previous_party_1,previous_party_2,previous_party_3,Winner,Loser,Winner's Party,Loser's Party,3-6_month_market_direction,6-12_month_market_direction,12-18_month_direction,1_after,3-6_month_performance,6-12_month_performance,12-18_month_performance,1_after_pct,sentiment
+11/8/1904,1,0,1,1,1,0,Theodore Roosevelt,Alton B. Parker,Republican,Democratic,1,1,0,1,0.082679372,0.152849741,-0.313759108,0.01384083,0.481465994
+11/3/1908,1,0,1,1,1,1,William Howard Taft,William Jennings Bryan,Republican,Democratic,1,1,0,1,0.161776213,0.197945845,-0.324983943,0.02026701,0.834656466
+11/5/1912,0,0,1,1,1,1,Woodrow Wilson,Theodore Roosevelt,Democratic,Progressive,1,1,0,0,0.027738819,0.123725592,-0.057297652,-0.044097996,0.445450128
+11/7/1916,0,1,0,0,1,1,Woodrow Wilson,Charles Evans Hughes,Democratic,Republican,0,0,1,0,-0.016378929,-0.046228448,0.455703977,-0.003744267,0.106471984
+11/2/1920,1,0,0,0,0,1,Warren G. Harding,James M. Cox,Republican,Democratic,0,0,1,0,-0.096564926,-0.218023742,0.261081654,-0.090481233,0.710260543
+11/4/1924,1,0,1,1,0,0,Calvin Coolidge,John W. Davis,Republican,Democratic,1,1,0,1,0.119809173,0.0258476,-0.079606625,0.061364285,0.523301399
+11/6/1928,1,0,0,1,1,0,Herbert Hoover,Al Smith,Republican,Democratic,0,1,1,1,-0.006696734,0.14215249,0.117009234,0.073308271,0.43361317
+11/8/1932,0,0,0,1,1,1,Franklin D. Roosevelt,Herbert Hoover,Democratic,Republican,1,0,0,0,0.187061711,-0.503039644,-0.251343825,-0.02626885,0.213609915
+11/3/1936,0,1,0,0,1,1,Franklin D. Roosevelt,Alf Landon,Democratic,Republican,1,1,1,1,0.124931954,0.037853548,0.277943705,0.003487214,0.2803542
+11/5/1940,0,1,0,0,0,1,Franklin D. Roosevelt,Wendell Willkie,Democratic,Republican,0,0,1,0,-0.141790538,-0.025815397,0.158895566,-0.015305349,0.04798312
+11/7/1944,0,1,0,0,0,0,Franklin D. Roosevelt,Thomas E. Dewey,Democratic,Republican,1,1,0,1,0.048106744,0.054602066,-0.014788373,0.011591649,0.454571022
+11/2/1948,0,1,0,0,0,0,Harry S. Truman,Thomas E. Dewey,Democratic,Republican,1,0,1,0,0.000220885,-0.012975636,0.052061113,-0.048503782,0.682225162
+11/4/1952,1,0,0,0,0,0,Dwight D. Eisenhower,Adlai Stevenson,Republican,Democratic,1,1,0,1,0.070084882,0.003041269,-0.01217795,0.038075931,0.657927848
+11/6/1956,1,0,1,1,0,0,Dwight D. Eisenhower,Adlai Stevenson,Republican,Democratic,1,1,1,1,0.001930238,0.097454205,0.102656663,0.0032373,0.84265882
+11/8/1960,0,0,0,1,1,0,John F. Kennedy,Richard Nixon,Democratic,Republican,1,0,1,1,0.012033318,-0.066521231,0.047573066,0.004848485,0.226130736
+11/3/1964,0,1,0,0,1,1,Lyndon B. Johnson,Barry Goldwater,Democratic,Republican,1,1,1,0,0.020052681,0.090600892,0.049646279,-0.003467533,0.23885073
+11/5/1968,1,0,0,0,0,1,Richard Nixon,Hubert Humphrey,Republican,Democratic,0,1,0,1,-0.045925229,0.074734885,-0.054461566,0.029721845,0.466823311
+11/7/1972,1,1,0,1,0,0,Richard Nixon,George McGovern,Republican,Democratic,1,1,0,1,0.016292758,0.123803042,-0.103076939,0.050338504,0.734969899
+11/2/1976,0,0,0,1,1,0,Jimmy Carter,Gerald Ford,Democratic,Republican,0,1,0,0,-0.008138783,0.207249431,-0.014661512,-0.010339456,0.305051967
+11/4/1980,1,0,1,0,1,1,Ronald Reagan,Jimmy Carter,Republican,Democratic,1,0,0,1,0.140585569,-0.002104279,-0.03374472,0.018171136,0.853500925
+11/6/1984,1,1,0,1,0,1,Ronald Reagan,Walter Mondale,Republican,Democratic,1,0,0,0,0.031202853,-0.040770801,-0.011601587,-0.050866836,0.873562832
+11/8/1988,1,0,1,1,1,0,George H. W. Bush,Michael Dukakis,Republican,Democratic,1,1,0,1,0.055098005,0.05644669,-0.156418206,0.011079953,0.879627316
+11/3/1992,0,0,0,1,1,1,Bill Clinton,George H. W. Bush,Democratic,Republican,1,1,1,1,0.005121222,0.095376311,0.039978087,0.016599442,0.368827798
+11/5/1996,0,1,0,0,1,1,Bill Clinton,Bob Dole,Democratic,Republican,1,1,1,1,0.038425712,0.137934903,0.11101211,0.041988051,0.057201128
+11/7/2000,1,0,0,0,0,1,George W. Bush,Al Gore,Republican,Democratic,1,0,0,0,0.024838664,-0.013153463,-0.029652117,-0.026560778,0.697828095
+11/2/2004,1,0,1,1,0,0,George W. Bush,John Kerry,Republican,Democratic,0,1,1,1,-0.013073492,0.037238068,0.141964981,0.044201222,0.716379608
+11/4/2008,0,0,0,1,1,0,Barack Obama,John McCain,Democratic,Republican,0,0,1,0,-0.129949867,-0.035825568,0.024914396,-0.083489163,0.094580171
+11/6/2012,0,1,0,0,1,1,Barack Obama,Mitt Romney,Democratic,Republican,1,1,0,1,0.00837758,0.080365318,-0.051864347,0.010926541,0.684435291
+11/8/2016,1,0,0,0,0,1,Donald Trump,Hillary Clinton,Republican,Democratic,1,1,0,1,0.046503117,0.000572461,-0.015435012,0.055144545,0.753409071
+11/3/2020,0,0,1,1,0,0,Joe Biden,Donald Trump,Democratic,Republican,1,0,1,1,0.122722924,-0.136130108,0.03178312,0.076195271,0.259129553
+11/5/2024,,0,1,0,1,0,Kamala Harris,Donald Trump,,,1,1,1,,0.012676737,0.13432188,0.011490635,,0.43134124
