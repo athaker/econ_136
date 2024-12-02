@@ -81,7 +81,8 @@ def execute_cycle():
             if limit_trade.orderStatus.status == "Filled":
                 sell_price = limit_trade.fills[0].execution.avgPrice
                 pnl += sell_price - buy_price
-                print(f"Order filled. PNL for this cycle: {sell_price - buy_price:.2f}")
+                print(f"Limit order filled at: {sell_price}")
+                print(f"PNL for this cycle: {sell_price - buy_price:.2f}")
                 break
         else:
             # If not filled in 30 seconds, close position with a market order
@@ -95,9 +96,8 @@ def execute_cycle():
             if close_trade.fills:
                 sell_price = close_trade.fills[0].execution.avgPrice
                 pnl += sell_price - buy_price
-                print(
-                    f"Market order executed. PNL for this cycle: {sell_price - buy_price:.2f}"
-                )
+                print(f"Market order filled at: {sell_price}")
+                print(f"PNL for this cycle: {sell_price - buy_price:.2f}")
             else:
                 print("Market order to close position not filled.")
 
