@@ -14,6 +14,23 @@ ib.qualifyContracts(contract)
 pnl = 0.0
 
 
+def close_existing_positions():
+    # Check for any open positions
+    positions = ib.positions()
+    for position in positions:
+        if position.contract.symbol == contract.symbol:
+            action = "SELL" if position.position > 0 else "BUY"
+            quantity = abs(position.position)
+            print(f"Closing existing position: {action} {quantity} {contract.symbol}")
+            close_order = MarketOrder(action=action, totalQuantity=quantity)
+            close_trade = ib.placeOrder(contract, close_order)
+            ib.sleep(2)  # Allow time for the order to fill
+            if close_trade.fills:
+                print("Position closed.")
+            else:
+                print("Failed to close position.")
+
+
 def print_market_data():
     ticker = ib.reqMktData(contract, snapshot=False)  # Ensure continuous updates
     print("Realtime Bid/Ask and Sizes:")
@@ -29,15 +46,17 @@ def execute_cycle():
     global pnl
 
     # Step 1: Place a market order
-    market_order = MarketOrder(action="BUY", totalQuantity=1)
+    market_order = MarketOrder(action="BUY", totalQuantity=100)
     market_trade = ib.placeOrder(contract, market_order)
-    print("Market order placed.")
+    print("Market buy order placed.")
     ib.sleep(2)  # Allow some time for the order to fill
-    print(f"Market order status: {market_trade.orderStatus.status}")
 
     # Get the average fill price
     if market_trade.fills:
         buy_price = market_trade.fills[0].execution.avgPrice
+        print(
+            f"Market order status: {market_trade.orderStatus.status} - Filled at: {buy_price}"
+        )
     else:
         print("Market order not filled.")
         return
@@ -47,10 +66,10 @@ def execute_cycle():
     ib.sleep(2)  # Allow time to fetch market data
 
     if ticker.ask:  # Ensure we have valid ask price
-        limit_price = ticker.ask
-        limit_order = LimitOrder(action="SELL", totalQuantity=1, lmtPrice=limit_price)
+        limit_price = ticker.ask + 0.02  # Place limit order slightly above ask price
+        limit_order = LimitOrder(action="SELL", totalQuantity=100, lmtPrice=limit_price)
         limit_trade = ib.placeOrder(contract, limit_order)
-        print(f"Limit order placed at ask price: {limit_price}")
+        print(f"Limit sell order placed at ask price: {limit_price}")
 
         # Monitor the order for 30 seconds
         start_time = time.time()
@@ -69,7 +88,7 @@ def execute_cycle():
             print(
                 "Limit order not filled within 30 seconds. Closing position with market order."
             )
-            close_order = MarketOrder(action="SELL", totalQuantity=1)
+            close_order = MarketOrder(action="SELL", totalQuantity=100)
             close_trade = ib.placeOrder(contract, close_order)
             ib.sleep(2)  # Allow time for the order to fill
 
@@ -81,12 +100,19 @@ def execute_cycle():
                 )
             else:
                 print("Market order to close position not filled.")
+
+            # Cancel the limit order
+            print("Cancelling the limit order.")
+            ib.cancelOrder(limit_order)
     else:
         print("No valid ask price available for limit order.")
 
 
+# Close any existing positions
+close_existing_positions()
+
 # Execute multiple cycles
-total_cycles = 3
+total_cycles = 2
 for cycle in range(total_cycles):
     print(f"\nStarting cycle {cycle + 1}...")
     execute_cycle()
