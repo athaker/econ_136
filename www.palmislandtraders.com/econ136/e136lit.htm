@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<!---  This is the additional literature page for Econ136, which uses pitssheet.css--->
+<!---  Begun on February 4, 2018, filed in Dropbox/CSSHTML/secure                  --->
+<!---  This is version e136lit.2.2  Dated May 23, 2018                             --->
+<!---  This is a secure page.                                                 -------->
+
+<html>
+
+<head>
+<title>Econ136 Additional Material</title>
+<meta charset="UTF-8">
+<meta name="description" content="Econ 136 additional material ">
+<meta name="keywords" content="HMC, Harvey Mudd College, economics, macroeconomics, finance, palmislandtraders, palm island traders,
+	course outline, calendar, content, stock market, bond, note, option, put, call, futures, derivatives, algo, algorithm, high-speed
+	trading, arbitrage, credit, interest rates">
+<meta name="author" content="Gary R. Evans">
+<link rel="shortcut icon" href="../images/palmfavicon1.ico" type="image/x-icon" />
+<!---
+<link type="text/css" rel="stylesheet" href="pitssheet.css" media="screen" >
+--->
+<link type="text/css" rel="stylesheet" href="../style/pitssheet.css" media="screen" >
+
+<link type="text/css" rel="stylesheet" href="../style/printsheet.css" media="print" >
+</head>
+<body id="e136bod">
+<div id="banner">
+<!---
+<img src="e136litbanner.jpg">
+--->
+
+<img src="../images/e136litbanner.jpg">
+
+</div>
+<div id="navbar"> 
+	<ul class="e136">
+		<li><a href="e136co.htm">Old E136 Course Outline</a></li>
+		<li><a href="e136cc.htm">Old E136 Course Calendar</a></li>
+		<li><a href="e136ls.htm">Old E136 Lecture Slides</a></li>
+		<li><a href="../mudd/hmcgre.html">Prof E's Courses</a></li>
+	</ul>
+</div>
+<div id="main" class="e136main"> 
+<!---  Master insert at bottom  --->
+<p>
+Material on this page is normally not assigned, but may be useful references for some of your various research projects. 
+</p>
+<hr>
+<h1>Primary financial research</h1>
+	<ul>
+		<li>Free open-source text: <a href="mpff.pdf">Mastering Python for Finance, </a> 
+			James Ma Weiming, 2015. </li>
+		<li>Free online book explaining use of conventional statistical methods for forecasting: <a href="https://otexts.org/fpp2/"> 
+			Forecasting Principles and Practice</a>, Rob Hyndman and George Athanasopoulos</li>
+		<li>A detailed full-bodied set of Python models to get one started: <a href="https://ntguardian.wordpress.com/2018/07/17/stock-data-analysis-python-v2/"> 
+			Stock Data Analysis with Python (2nd ed)</a>, Curtis Miller, July 17, 2018.</li>
+		<li>Using Python for time series analysis:<a href="https://www.codespeedy.com/time-series-analysis-in-python/">Time Series Analysis in Python
+			</a>Kunal Gupta, CodeSpeedy</li>
+		<li>Python scalping model: <a href="https://medium.com/automation-generation/concurrent-scalping-algo-using-async-python-8df9f31e22f1">
+			Concurrent Scalping Using Async Python</a> Medium article by Hitoshi Harada, October 7, 2019 [Technical analysis]</li>
+		<li>GitHub source supplement to Python scalping model: <a href="https://github.com/alpacahq/example-scalping">supplement to the Concurrent Scalping Model
+			</a>, (good example of the use of asyncio).</li>
+		<li>An excellent, exhaustive review of stock trading on anomalies: <a href="https://jbmarwood.com/stock-market-anomalies/"> 
+			https://jbmarwood.com/stock-market-anomalies/</a>, J.B. Marwood, "Stock Market Anomalies ..," May 22, 2018.</li>
+		<li>447 market anomalies statistically tested against stock returns!: <a href="anomalies_testing.pdf"> 
+			https://www.palmislandtraders.com/econ136/anomalies_testing.pdf</a>, Kewei Hou, Chen Xue, and Lu Zhang, "Replicating Anomalies,"
+			Fischer College of Business Working Paper Series, June 2017</li>	
+		<li>Actual trading costs and market impact of large traders: <a href=https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3229719>
+			Trading Costs</a>, Andrea Frazzini, Ronen Israel, Tobias Moskowitv, [draft], SSRN, August 22, 2018.</li>
+		<li>S&P mometum modeling methods: <a href="s&amp;p_momentum_method.pdf">
+			S&P 500 Momentum, </a>S&P 500 Momentum Indices Methodology, January 2018.</li>
+		<li>The original article that documented the momentum effect: <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/0022-1082.00342"> 
+			 https://onlinelibrary.wiley.com/doi/full/10.1111/0022-1082.00342</a> Narasimhan Jegadesh, "Profitability of Momentum Strategies ..,"
+			 Journal of Finance, 17 December 2002.</li>
+		<li>An excellent and practical approach to building a momentum investment model: <a href="momtm_alpha.pdf"> 
+			Quantitative Insights: Momentum</a>, Paul Bukowski, Hartford Investment Managment, HIMCO Monthly Insights, May 2018.</li>
+		<li>Python modeling of momentum:  
+			<a href="https://www.linkedin.com/pulse/using-python-build-your-own-sp-500-momentum-factor-fund-nasser-cfa/"> Using Python
+			to Build Your Own S&P 500 Momentum Factor Fund, </a> Rami Nasser, March 2018. </li>
+		<li>Primary momentum model research paper: <a href="http://docs.lhpedersen.com/TimeSeriesMomentum.pdf">Time Series Momentum, </a>
+			Moskowitz, Ooi, Pederson, <b>Journal of Finance</b>, 2011. </li>
+		<li>Mean reversion strategies - a comprehensive overview: <a href="https://jbmarwood.com/mean-reversion-trading-strategy/">
+			How to Build a Mean Reversion Trading Strategy, </a> J.B. Marwood, April 20, 2018.</li>
+		<li>The Kelly Criterion: How much can you safely bet (famous classical article)?: <a href="thorpe_kelly_crit.pdf">
+			The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market</a> by Edward Thorp, Harvard reading notes, originally
+			published in The 10th International Conference and Gambling and Risk Taking, June 1997, edited in 2000, corrections in 2005.</li>
+		<li>Quantopian 16-factor risk model: <a href="https://www.quantopian.com/papers/risk"> https://www.quantopian.com/papers/risk</a>
+			, Different ways to represent risk, all easily programmable, Quantopian, undated (but recent).</li>
+		<li>Python-based correlation analysis using Alphavantage: 
+			<a href="https://www.linkedin.com/pulse/average-correlations-between-sp-500-sectors-using-rami-nasser-cfa/">
+			Average Correlations between S&P 500 Sectors Using Python, </a> Rami Nasser, 2018. </li>
+		<li>Pairs trading (Python Jupyter Notebook): <a href="https://github.com/LongOnly/Quantitative-Notebooks/blob/master/PairsTrading.ipynb"> 
+			https://github.com/LongOnly/Quantitative-Notebooks/blob/master/PairsTrading.ipynb</a> 
+			(Substitute IEX data for finance.yahoo data if using this).</li>
+		<li>Pairs trading and related: <a href="https://quantoisseur.wordpress.com/2017/11/06/cointegration-correlation-and-log-returns/"> 
+			Cointegration</a>, Correlation and Log Returns, Colton Smith and Eric Kammers, <i>Quantoisseur</i>, (undated but recent).</li>
+		<li>Life-cycle Margin Investing: <a href="life_cycle_margin.pdf">Life-Cycle Investing and 
+			Leverage: Buying Stock on Margin can Reduce Retirement Risk, </a> Ian Ayres and Barry Nalebuff, 2008. </li>
+		<li>Portfolio rebalancing model and analysis: <a href="https://hackernoon.com/simulating-portfolio-rebalances-when-does-it-pay-to-rebalance-89edc2445313"> 
+			https://hackernoon.com/simulating-portfolio-rebalances-when-does-it-pay-to-rebalance-89edc2445313</a> Anthony Xie, "Simulating Portfolio Rebalances -
+			When Does it Pay to Rebalance?", <b>Hackernoon</b>, Oct. 26, 2018</li>
+		<li>Shifting normal distribution, including Python code:
+			<a href="https://datasoaring.blogspot.com.br/2017/10/seeing-normal-distribution-dow-jones.html"> 
+			https://datasoaring.blogspot.com.br/2017/10/seeing-normal-distribution-dow-jones.html</a></li>
+		<li>Hurst exponent (Python): <a href="https://pypi.org/project/hurst/">hurst 0.0.5</a>, PyPi model by Dmitry Motti, February 7, 2019.</li>		
+		<li>Hurst exponent calculation (is this a Markov process?): <a href="https://github.com/Mottl/hurst"> 
+			https://github.com/Mottl/hurst</a> modeled in Python.</li>
+		<li>(Hurst exponent) Modeling Demonstration of Memory in a Time Series: <a href="https://www.youtube.com/watch?v=jYrpABY5YUw"> 
+			https://www.youtube.com/watch?v=jYrpABY5YUw</a>, showing why the Hurst exponent might matter.</li>
+		<li>Levy Jump Diffusion Processes (small discontinuities): <a href="levy_jump.pdf"> 
+			Detecting Jumps from </a> Levy Jump Diffusion Processes, Suzanne Lee and Jan Hannig, 2009.</li>
+		<li>The Drift Burst Hypothesis (a modelled tail event of the flash crash variety): 
+			<a href="drift_burst_hypothesis_ssrn_aug2018.pdf.html">The Drift Burst Hypothesis</a>, by Kim Christensen, Roel
+			Oomen, and Roberto Reno, draft distributed by 
+			<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2842535">SSRN</a>, August 1, 2018, and see also author's slide show of the 
+			<a href="https://bigdatafinance.eu/wp/wp-content/uploads/2017/07/The-Drift-Burst-Hypothesis.pdf">testing model<a>.</li>
+		<li>Bachelier Options Model [allows negative options prices and negative strikes, and is the oldest options pricing model]: How Close are the 
+			<a href="compare_bachelier_bsm.pdf"> Option Pricing Formulas</a> of Bachelier and Black-Merton_Scholes?,
+			by Walter Schachermayer and Josef Teichmann, Cornell University, November 8, 2007. </li>
+		<li>What period is more volatile, overnight or duing market hours? <a href="https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf">
+			The Overnight Drift</a>, by Nina Boyarcchenck, Lars Larsen, and Paul Whelan, Federal Reserve Bank of New York Staff Report No. 917, 
+			February 2020.</li>
+		<li>Alternative Volatility Models: <a href="local_stochastic_jump_iv.pdf">Local Volatility, Stochastic 
+			Volatility</a>, and Jump Diffusion Models, by Martin Haugh, 2013.</li>
+		<li>Volatility skew: <a href="volatility_skew.pdf"> Implied Volatility Skew</a> and Firm-Level Tail Risk, 
+			[draft], by Andrew Van Buskirk, University of Chicago Booth School of Business, October, 2009</li>		
+		<li>Volatility smile: <a href="option_smile_SABR.pdf">Option Smile</a> and the SABR Model of 
+			Stochastic Volatility, [slide set], by Andrew Lesniewski, Baruch College, March 20, 2014.</li>
+		<li>VIX Whitepaper: <a href="vixwhite.pdf">The CBOE Volatility Index - VIX</a> </li>
+		<li>Kalman filters (advanced): <a href="https://www.cis.upenn.edu/~mkearns/finread/filtering_in_finance.pdf">Filtering in Finance
+			</a>, Wilmott Magazine, Alizera Javaheri, Delphine Lautier, Alain Galli.</li>
+		<li>Fourier transforms: <a href="fftct.pdf">Discrete Fourier transforms and related topics, </a> 
+			Paul Swarztrauber, 2003. </li>
+		<li>Phase transition: <a href="stprfluc.pdf">Criticality and Phase Transition in 
+			Stock-Price Fluctuations, </a> Kiyono et. al., 2006. </li>
+		<li>Monte Carlo simulations: <a href="http://www.johnwittenauer.net/a-sampling-of-monte-carlo-methods/">A sampling of Monte Carlo Methods  
+			(in Python), </a> John Wittenauer, April 16, 2018. </li>
+		<li>Post-earnings arbitrage trading: <a href="https://quantpedia.com/Blog/Details/too-much-arbitrage-contributes-to-overreaction-in-post-earnings-announcement-dr"> 
+			(Paper abstract)</a>, "Too Much Arbitrage Contributes to Overreaction in Post Earnings Announcement Drift," Li, 
+			Quantpedia, November 7, 2018.</li>
+		<li>Trading ETF discounts: <a href="etf_discount_trades.pdf"> 
+			https://www.palmislandtraders.com/econ136/etf_discount_trades.pdf</a> "CEF Relative Discounts and Premiums," Fidelity/Morningstar.</li>
+		<li>The failure of Knight Capital: <a href="https://hackernoon.com/the-rise-and-fall-of-knight-capital-buy-high-sell-low-rinse-and-repeat-ae17fae780f6"> 
+			https://hackernoon.com/the-rise-and-fall-of-knight-capital-buy-high-sell-low-rinse-and-repeat-ae17fae780f6</a> 
+			Bishr Tabbaa, "The Rise and Fall of Knight Capital — Buy High, Sell Low. Rinse and Repeat", <b>Hackernoon</b>, August 5, 2018.</li>
+		<li>High-Frequency Trading (HFT): <a href="hft_dbank.pdf"> 
+			Michael Chlistalla, "High Frequency Trading - Better than it's reputation?" Deutsche Bank Research, February 7, 2011
+			</a> A detailed defense of HFT techniques and methods.</li>
+		<li>High-Freqeuncy Trading and Market Making: <a href="https://people.csail.mit.edu/sanmay/papers/das-qf05-final.pdf">
+			A Learning Market-Maker in the Glosten-Milgrom Modelo</a>, Sanmay Das, MIT, undated.
+		<li>HFT Order Imbalance Strategy: <a href="hftois.pdf"> 
+			"Order Imbalance Based Strategy</a> in High Frequency Trading," Darryl Shen, May 2015.</li>	
+		<li>The Origin of High-Frequency Trading in Chicago: <a href="hft_history.pdf"> 
+			"Mechanizing the Merc: The Chicago Mercantile Exchange and the Rise of High-Frequency Trading,"</a> Donald MacKenzie.</li>
+		<li>Programming for HFT: <a href="http://www.automatedtrader.net/articles/strategies/156590/what-ive-learned-building-low-latency-systems"> 
+			What I have learned from building low latency systems</a>, Ariel Silahian, Automated Trader Magazine, Q4 2016.</li>
+		<li>Evaluating DJIA correlation trends using Laplace distribution: <a href="https://wwww.palmislandtraders.com/econ136/dow_correl.pdf"> 
+			"Exploiting statistical dependencies of time serieswith hierarchical correlation reconstruction</a> Jarek Duda, arXiv:1807.04119v3, 
+			September 11, 2018.</li>
+		<li>[Options] - Gamma fragility for delta hedging by large options traders may add to stock volatilty: 
+			<a href="gamma_fragility_ssrn_nov2020.pdf">Gamma Fragility</a>, by Andrea Barbon and Andrea 
+			Buraschi, University of St. Gallen, School or Finance Research Paper No. 2020/05, distributed by 
+			<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3725454">SSRN</a>, November 5, 2020.</li>
+		<li>[Options] - Writing generic credit spreads (with puts) will not beat the performance of SPY: <a href="https://spintwig.com/spy-put-strategies/">
+			SPY Short Put Strategy Performance</a>, spintwig.com, June 10, 2019.</li>
+		<li>[Options] - Vertical put spreads underperform SPY: <a href="https://spintwig.com/spy-vertical-put-spread-strategy-performance/">
+			SPY Vertical Put Strategy Performance</a>, spintwig.com, June 17, 2019.</li>
+		<li>[Options backtesting]: <a href="https://spintwig.com/backtesting-mechanics/">
+			Backtesting Mechanics</a>, spintwig.com, May 29, 2019.</li>
+		<li>[Options] - Options Wheel Strategy in SPY fails to beat SPY buy and hold: <a href="https://spintwig.com/spy-wheel-45-dte-cash-secured-options-backtest/#Results">
+			SPY Wheel 45 DTE Cash-Secured Options Backtest</a>, spintwig.com, October 2, 2020.</li>
+		<li>A set of very detailed procedural notes on random trading topics: <a href="maxdama.pdf"> 
+			Max Dama on Automated Trading</a>, published in 2011 by researcher Max Dama at Headlands, but much of it still relevant. Scan it, if nothing else.</li>
+		<li>Looking for a job as a quant but unsure of the job requirements?: 
+			<a href="https://blog.headlandstech.com/2017/08/03/quantitative-trading-summary/"> 
+			Quantitative Training Summary</a> by Headlands Tech researcher Max Dama, August 3, 2017.</li>	
+	</ul>
+<hr>
+<h1>All Things Bayesian</h1>
+<p>If you don't understand the Bayesian approach by now, it's time to get started. Your professor is fundamentally a Bayesian. (In memory of Mudd Prof Stavros Busenberg, world-renowned
+Bayesian theorist).</p>
+	<ul>
+		<li>Mudd Prof Stavros Busenberg's work: <a href="https://www.researchgate.net/scientific-contributions/2010937553_Stavros_Busenberg">research archive
+			</a>, when he was at Mudd (1988-1997). </li>
+		<li>A short, simple introduction to Bayesian thinking (video): <a href="https://www.youtube.com/watch?v=HZGCoVF3YvM">Bayes theorem, the geometry of changing beliefs</a>, 
+			YouTube channel 3Blue1Brown, 2019.</li>
+		<li>Getting started in Bayesian statistics (video1): <a href="https://www.youtube.com/watch?v=be2wuOaglFY"> 
+			Everything wrong with statistics</a>, from the perspective of Kristin Lennox of Lawrence Livermore Labs, 2015.</li>
+		<li>Getting started in Bayesian statistics (video2): <a href="https://www.youtube.com/watch?v=eDMGDhyDxuY"> 
+			All about that Bayes:</a> Probability, Statistics, and the Quest to Quantify Uncertainty, Kristin Lennox of Lawrence Livermore Labs, 2016.</li>
+		<li>A very practical and useful book about Bayesian Statistics (does <i>not</i> emphasize finance): <a href="https://www.oreilly.com/library/view/think-bayes-2nd/9781492089452/"> 
+			Think Bayes</a>: Bayesian Statistics in Python, 2nd ed., by Allen B. Downey, O'Reilly, 2021.
+		<li>Portfolio Optimisation (Bayesian): <a href="https://hudsonthames.org/bayesian-portfolio-optimisation-the-black-litterman-model/">Bayesian Portfolio
+			Optimisation</a>: Introducing the Black-Litterman Model, by Aditya Vyas, Hudson and Thames, January 13, 2021, see also the <a 
+			href="https://hudson-and-thames-portfoliolab.readthedocs-hosted.com/en/latest/bayesian/black_litterman.html">python application of this model.</a></li>
+		<li>A Bayesian method (machine learning) to detect changepoints (discontinuities and changes of state): <a href="https://arxiv.org/pdf/0710.3742.pdf">Bayesian Online Changepoint
+			Detection</a>, Ryan Prescott Adams and David J.C. MacKay, Cornell University, October 19, 2007.</li>
+		<li>Free and excellent book applying Python to Bayesian theory: 
+			<a href="https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter1_Introduction/Ch1_Introduction_PyMC2.ipynb"> 
+			Bayesian Methods for Hackers</a> (includes conditional probability theorem code), Cameron Davidson, also available as hardcopy, 2015.</li>
+		<li>A strictly Bayesian approach in Python: <a href="https://towardsdatascience.com/bayesian-optimization-in-trading-77202ffed530"> 
+			Bayesian Optimization in Trading, </a> Sergey Malchevskiy, "Towards Data Science," February 15, 2019.</li>
+		<li>Bayesian linear regression (Python): <a href="https://maxhalford.github.io/blog/bayesian-linear-regression"> 
+			Bayesian linear regression for practitioners</a>, Max Halford, February 26, 2020.</li>
+		<li>Kalman filters, used in engineering, are essentially Bayesian, but are they suitable for use in finance? Decide for yourself. 
+			<a href="https://medium.com/@jaems33/understanding-kalman-filters-with-python-2310e87b8f48">Here</a> is an article that discusses the logical structure of a Kalman filter  
+			and provides Python examples from engineering, "Understanding Kalman Filters with Python," James Teow, Medium, May 3, 2018.</li>
+		<li>Very valuable GitHub resource! Python Bayesian and Kalman filters: <a href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">
+			Kalman and Bayesian Filters in Python, </a> Roger Labbe and multiple contributors, 2020 ongoing.</li>
+		<li>This is what your teacher would use if he was a young man with a year to build a model - Using Bayesian methods for inference:
+			<a href="https://www.youtube.com/watch?v=-sIOMs4MSuA"> https://www.youtube.com/watch?v=-sIOMs4MSuA</a> "Bayesian Non-parametric
+			Models for Data Science," Christopher Fonnesbeck, PyCon 2018.</li>
+	</ul>
+<hr>
+<h1>Jupyter Notebooks and Python zip files.</h1>
+<p> Here are some of your teacher's programs, converted to Jupyter Notebooks, plus a few FOOS Notebooks.</p>
+	<ul>
+		<li>IEX Data API guide (Jupyter): 
+			<a href="iexcloud.html">https://www.palmislandtraders.com/econ136/iexcloud.html </a>
+			Use to download historical stock data (including ETFs) from IEX.</li>
+		<li>Earnings Calendar: <a href="earn_calendar.html"> 
+			https://www.palmislandtraders.com/econ136/earn_calendar.html</a> Download earnings dates from the earningscalendar.net API, in various formats.</li>
+		<li>Converted BSM for solving the IDV of a call: <a href="callidv.html">
+			https://www.palmislandtraders.com/econ136/callidv.html</a>, callidv.py.</li>			
+		<li>Black-Scholes-Merton logical:
+			<a href="black_scholes_merton_logical.html"> https://www.palmislandtraders.com/econ136/black_scholes_merton_logical.html.</a> 
+			A non-Pythonic step-by-step logical development of the Black-Scholes-Merton call option pricing model.</li>
+		<li>Pairs trading (Python Jupyter Notebook): <a href="https://github.com/LongOnly/Quantitative-Notebooks/blob/master/PairsTrading.ipynb"> 
+			https://github.com/LongOnly/Quantitative-Notebooks/blob/master/PairsTrading.ipynb</a> 
+			(Substitute IEX data for finance.yahoo data if using this).</li>
+		<li>The <b>Interactive Broker API</b> files were removed at the end of the semester. Prof Evans is now (summer/fall 2020) upgrading his models to the newest version of
+			ib_insync (the originals were one generation old) and will gradually make these available after they are tested.</li>	
+		<li><font color="red"><b>New in Aug/Sep 2020! </b></font>Credit Spread Mapping Model <a href="credit_spread_mappings_qd_v4_4.html">
+			html version 4.4</a>, and Debit Spread Mapping Model <a href="debit_spread_mappings_qd_v4_1.html">html version 4.1</a>
+			and the <a href="vert_spreads_sep20.zip">zip ipynb versions</a> that were used to make Parts 5 and 6 of the Options 
+			Stategy videos. <font color="red"><b>Note!</b></font>: requires finutil.py version 2.9 and timeutil.py version 1.5, below.</li>
+		<li><font color="red"><b>Upgraded in Aug/Sep 2020! </b></font>Financial utilities v.2.9 <a href="finutil_v2_9.pdf"> (pdf file)</a>, 
+			and Time utilities ver 1.5 <a href="timeutil_v1_5.pdf"> (pdf file)</a> and/or 
+			<a href="utility_sep20.zip"> (both python files in a zip) </a>called by some of these programs above.</li>
+	</ul>
+<hr>
+<h1>Python, Numpy, Pandas, and Asyncio</h1>
+<p>You are required to know Python to take this class, but how much do you know about Numpy, Pandas, and solving problems of concurrency,
+latency, weighting, data slicing and the like?</p>
+	<ul>
+		<li>Python detailed reference guide:
+			<a href="https://learnxinyminutes.com/docs/python3/"> Learn X in Y minutes: Python 3.</a></li>	
+		<li>Python detailed reference guide:
+			<a href="https://gto76.github.io/python-cheatsheet/#json">Comprehensive Python Cheatsheet</a>, Jure Sorn, March 14, 2018.</li>
+		<li>Intro to Numpy and Pandas: 
+			<a href="https://cloudxlab.com/blog/numpy-pandas-introduction/"> https://cloudxlab.com/blog/numpy-pandas-introduction/</a> </li>
+		<li>2 Numpy cheat sheets: <br>(1)
+			<a href="http://datasciencefree.com/numpy.pdf"> http://datasciencefree.com/numpy.pdf</a><br> (2)
+			<a href="https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Numpy_Python_Cheat_Sheet.pdf"> 
+				https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Numpy_Python_Cheat_Sheet.pdf</a></li>
+		<li> 2 Pandas cheat sheets: <br>(1)
+			<a href="https://github.com/pandas-dev/pandas/blob/master/doc/cheatsheet/Pandas_Cheat_Sheet.pdf"> 
+			https://github.com/pandas-dev/pandas/blob/master/doc/cheatsheet/Pandas_Cheat_Sheet.pdf</a><br> (2)
+			<a href="https://s3.amazonaws.com/assets.datacamp.com/blog_assets/PandasPythonForDataScience.pdf"> 
+				https://s3.amazonaws.com/assets.datacamp.com/blog_assets/PandasPythonForDataScience.pdf</a></li>	
+		<li>Intro to Python decorators: 
+			<a href="https://pabloariasal.github.io/python-decorators-from-the-ground-up/">
+				https://pabloariasal.github.io/python-decorators-from-the-ground-up/</a></li>
+		<li>Pandas approach to EWMA weighting;
+			<a href="http://pandas.pydata.org/pandas-docs/version/0.17.0/generated/pandas.ewma.html"> 
+				http://pandas.pydata.org/pandas-docs/version/0.17.0/generated/pandas.ewma.html</a></li>
+		<li>How the new Python formatting conditions are different:
+			<a href="https://cloudxlab.com/blog/numpy-pandas-introduction/"> https://cloudxlab.com/blog/numpy-pandas-introduction/</a></li>	
+		<li>Pandas time and date formatting protocols (extensive data-slicing capabilities): 
+			<a href="https://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases">
+			https://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases"</a></li>
+		<li>Useful Numpy array operations:
+			<a href="numpyops.html"> https://www.palmislandtraders.com/econ136/numpyops.html</a>
+			, written by Prof E in Jupyter.</li>
+		<li>Python Asyncio basic functions: 
+			<a href="https://medium.com/@alairock/asyncio-basics-in-python-29bf30cf254f">
+			"https://medium.com/@alairock/asyncio-basics-in-python-29bf30cf254f"</a>for concurrency and other issues in APIs.</li>
+	</ul>
+<hr>
+<h1>Non-Python trading systems and software (Java, MQL5, C++)</h1>
+<p>This class is Python-based, with a little bit of legacy Excel thrown in. But most trading software is still written in Java, C++, or the
+specialized trading software built only for trading models, MQL5 (or MQL4). Here is a selection of some material, more or less randomly 
+selected, that shows that there is huge non-Python world out there.
+	<ul>
+		<li>MetaQuotes, MetaTrader, and MQLR: This is a full-featured community-supported (in part) legacy trading system that is often 
+			recommended to novice traders. <a href="https://www.metaquotes.net/en/metatrader5/algorithmic-trading"> 
+			Megaquotes</a>, (MQL5 is based on C++)</li>
+		<li>Java Virtual Machine: a full-bore JVM trading infrastructure. <a href="https://github.com/paritytrading"> 
+			ParityTrading</a>, Open-source Github (no trader interface).</li>
+	</ul>
+</p>
+<hr>
+<!---
+<h1>TD Ameritrade and Interactive Brokers Python API</h1>
+<p> A program in financial modeling and algo developoment isn't going to go very far unless you can connect to a trading site. Your teacher
+uses Interactive Brokers because they have an API that lets you use your own interfaces and algos. It is poorly documented though so you have
+to work at your your initial design. TDAmeritrade introduced a much simpler API in fall 2018. These resources will help you use them:</p>
+	<ul>
+		<li>TDAmeritrade simple API for stocks and options (beta only when last checked):
+			<a href="https://github.com/timkpaine/tdameritrade">
+				 https://github.com/timkpaine/tdameritrade</a></li>
+		<li>Using IB Insync for the API (recommended):
+			<a href="https://rawgit.com/erdewit/ib_insync/master/docs/html/index.html">
+				 https://rawgit.com/erdewit/ib_insync/master/docs/html/index.html</a></li>
+		<li>The IB Insync use of Jupyter Notebook:
+			<a href="https://rawgit.com/erdewit/ib_insync/master/docs/html/notebooks.html"> 
+				https://rawgit.com/erdewit/ib_insync/master/docs/html/notebooks.html</a></li>
+		<li>The original IB instuctional video (hard to use but has some material that is useful):
+			<a href="https://www.interactivebrokers.com/en/index.php?f=1350&t=recorded&p=4"> 
+				(Choose "Introduction to TWS Python API" from the menu).</a></li>	
+		<li>IbPy and many examples of trade and data query commands:
+			<a href="https://github.com/anthonyng2/ib/blob/master/IbPy%20Demo.ipynb">
+				 https://github.com/anthonyng2/ib/blob/master/IbPy%20Demo.ipynb</a></li>
+	</ul>
+<hr>
+<h1>PyQT, QT Designer, and Python GUIs</h1>
+<p>Do you really plan to enter all initial input in the top of your IDE for the rest of your life? Python is weak on interfaces and
+tkinter is inadequate and ugly. But PyQt5 is easy to learn IFF you use QT Designer, the WYSIWYG form designer, a perfect solution for
+finance apps that require user input.</p>
+	<ul>
+		<li>Reference for using QT designer for Python GUIs:
+			<a href="http://pyqt.sourceforge.net/Docs/PyQt5/designer.html"> http://pyqt.sourceforge.net/Docs/PyQt5/designer.html</a></li>
+		<li>Example - installing PyQT5 and writing your first GUI using QT Designer:
+			<a href="http://projects.skylogic.ca/blog/how-to-install-pyqt5-and-build-your-first-gui-in-python-3-4/"> 
+					http://projects.skylogic.ca/blog/how-to-install-pyqt5-and-build-your-first-gui-in-python-3-4/</a></li>
+		<li>QT designer manual:
+			<a href="http://doc.qt.io/qt-5/qtdesigner-manual.html"> http://doc.qt.io/qt-5/qtdesigner-manual.html</a></li>
+		<li>Getting to know Qt designer:
+			<a href="http://doc.qt.io/qt-5/designer-to-know.html"> http://doc.qt.io/qt-5/designer-to-know.html</a></li>	
+		<li>Example: Using PyQt5 in Python for a GPA calculator: 
+			<a href="https://medium.com/@arepp/gui-gpa-calculator-in-python-using-pyqt5-b3ada2ca650e"> 
+			https://medium.com/@arepp/gui-gpa-calculator-in-python-using-pyqt5-b3ada2ca650e</a></li>
+	</ul>
+--->
+<hr>
+<h1>Data Visualization, Matplotlib, and Seaborn</h1>
+<p>A Python programmer has many options for data visualization, including matplotlib from the standard library. Your teacher
+also favors the Seaborn library, which supplements and enhances Matplotlyb rather than replace it. Seaborn will make your
+graphs look better.</p>	
+	<ul>
+		<li>Sample Python for dataset control and plotting using Numpy, Pandas, and Seaborn (Github): 
+			<a href="https://github.com/PhantomInsights/baby-names-analysis"> Data ETL and Analysis Workflow</a>, agentphantom, 2019.</li>
+		<li>Five quick and easy data visualizations in Python:
+			<a href="https://towardsdatascience.com/5-quick-and-easy-data-visualizations-in-python-with-code-a2284bae952f">
+			https://towardsdatascience.com/5-quick-and-easy-data-visualizations-in-python-with-code-a2284bae952f</a></li>
+		<li>An overview of Matplotlib in Data Visualization: 
+			<a href="https://heartbeat.fritz.ai/introduction-to-matplotlib-data-visualization-in-python-d9143287ae39"> 
+			https://heartbeat.fritz.ai/introduction-to-matplotlib-data-visualization-in-python-d9143287ae39
+			</a>, Ehi Aigiomawu, "Introduction to Matplotlib - Data Visualization in Python," Heartbeat (web site).</li>
+		<li>Seaborn statistical data visualization: <a href="https://seaborn.pydata.org/"> https://seaborn.pydata.org/</a></li>
+		<li>Colorbrewer 2.0 pallette for complex geography and color-blind audience: <a href="http://colorbrewer2.org/">
+			http://colorbrewer2.org/</a></li>
+	</ul>
+<hr>
+<h1>Statistics, Machine Learning, Q-learning, and Neural Nets </h1>
+<p> This is not a course in statistics and this course could not be taught if I had to teach a lot of statistics.
+Nonetheless I do draw from some statistical models (and I usually program them myself) and the truly interested student 
+is going to try to learn a lot of statistics and apply statistical models in a lot of applications. That is why 
+students should peruse the first entry below, the <b>StatsModels</b>, an extremely comprehensive and deep Python library
+that to some extent is a reasonable substitute for <b>R</b>.</p>
+<p> Machine learning and AI are just starting to emerge as important with a lot of potential in financial modeling. In this class
+we don't cover machine learning because (1) your teacher isn't (yet) qualified to teach it (but he is learning by reading and doing
+all this stuff below), (2) AI is considered for its promise, not any results ... it is not yet widely applied in finance, (3) we don't
+have time in our schedule!</p>
+	<ul>
+		<li>A Python statistical library : <a href="https://www.statsmodels.org/stable/index.html"> 
+			StatsModel</a>,  Statistics in Python, an extensive library with many examples.</li>
+		<li>Sentiment analysis using Twitter and Google Trends: 
+			<a href="https://scholar.smu.edu/cgi/viewcontent.cgi?article=1039&context=datasciencereview">Cryptocurrency Price Prediction
+			</a> Using Tweet Volumes and Sentiment Analysis, Jethin Abraham, Daniel Higdon, John Nelson, and Juan Ibarra, 
+			SMU Data Science Review, Vol 1 No. 3, 2018.</li>
+		<li>Written by Mudder Avi Thaker: 
+			<a href="https://github.com/Microsoft/CNTK/blob/master/Tutorials/CNTK_104_Finance_Timeseries_Basic_with_Pandas_Numpy.ipynb">
+			https://github.com/Microsoft/CNTK/blob/master/Tutorials/CNTK_104_Finance_Timeseries_Basic_with_Pandas_Numpy.ipynb</a>
+			CNTK104: Cognitive Toolkit for time series data, deep learning algos.</li>
+		<li>Predicting Stock Performance with Natural Language Deep Learning: 
+			<a href="https://www.microsoft.com/developerblog/2017/12/04/predicting-stock-performance-deep-learning/"> 
+			https://www.microsoft.com/developerblog/2017/12/04/predicting-stock-performance-deep-learning/</a> Patty Ryan, 
+			Microsoft Developer Blog, December 4, 2017.</li>
+		<li>Mimicing adaptive limit order traders with deep learning: <a href="dl_limit_order.pdf"> 
+			Deep Learning can Replicate Adapative Traders in a Limit Order Market,</a> Arthur le Calvez and David Cliff, University of
+			Bristol, November 2018.</li>
+		<li>Basic Machine Learning with SciKit-learn: <a href="https://www.grahamwheeler.com/posts/basic-machine-learning.html"> 
+			https://www.grahamwheeler.com/posts/basic-machine-learning.html</a> by Graham Wheeler. No finance examples but a very clear intro
+			to a powerful intro to building ML models.</li>
+		<li>Using Google's GPUs for machine learning: 
+			<a href="https://hackernoon.com/train-your-machine-learning-models-on-googles-gpus-for-free-forever-a41bd309d6ad">
+			https://hackernoon.com/train-your-machine-learning-models-on-googles-gpus-for-free-forever-a41bd309d6ad </a>, for free!</li>
+		<li>The Q-learning Python library:
+		    <a href="https://keras.io/"> https://keras.io/</a></li>
+		<li>Github TensorFlow tutorials (extensive examples):
+		    <a href="https://github.com/Hvass-Labs/TensorFlow-Tutorials"> https://github.com/Hvass-Labs/TensorFlow-Tutorials</a></li>
+		<li>Udacity deep learning course (free, sponsored by Google):
+			<a href="https://eu.udacity.com/course/deep-learning--ud730"> https://eu.udacity.com/course/deep-learning--ud730</a></li>
+		<li>Q learning video games (analogies):
+			<a href="https://www.youtube.com/watch?v=79pmNdyxEGo"> https://www.youtube.com/watch?v=79pmNdyxEGo</a></li>	
+		<li>Machine learning with Python (intro):
+			<a href="http://devarea.com/machine-learning-with-python-introduction/#.Wkv1PnWnFNA"> 
+			http://devarea.com/machine-learning-with-python-introduction/#.Wkv1PnWnFNA</a></li>	
+		<li>Deep learning portfolio management:
+			<a href="https://github.com/wassname/rl-portfolio-management"> https://github.com/wassname/rl-portfolio-management</a></li>
+		<li>Machine learning for trading (research paper): 
+			<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3015609"> https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3015609</a></li>
+		<li>Reinforcement learning for crypto trading:
+			<a href="https://github.com/jaybutera/tradebot"> https://github.com/jaybutera/tradebot</a></li>
+		<li>The Hitchhiker's Guide to Machine Learning in Python: 
+			<a href="https://medium.freecodecamp.org/the-hitchhikers-guide-to-machine-learning-algorithms-in-python-bfad66adb378"> 
+				https://medium.freecodecamp.org/the-hitchhikers-guide-to-machine-learning-algorithms-in-python-bfad66adb378</a></li>
+		<li>Machine learning in Python, Sci-kit learn:
+			<a href="http://scikit-learn.org/stable/"> http://scikit-learn.org/stable/</a> Comprehensive data tools, BSD license.</li>
+		<li>Machine learning basics:
+			<a href="https://github.com/zotroneneis/machine_learning_basics"> https://github.com/zotroneneis/machine_learning_basics
+			</a> Python code not related to finance.</li>
+		<li>Python linear regression: <a href="https://towardsdatascience.com/linear-regression-detailed-view-ea73175f6e86">
+			https://towardsdatascience.com/linear-regression-detailed-view-ea73175f6e86</a> Code examples.</li>
+		<li>Machine learning limitations in finance: <a href="http://mathinvestor.org/2018/11/the-problem-with-financial-oracles/"> 
+			The Problem with Financial Oracles </a>, Mathematical Investor, November 5, 2018.</li>
+	</ul>
+<hr>
+<h1>Using Julia for Data Science and Finance</h1>
+<p> Your teacher thinks that Julia, a new Python-friendly programming language that blends the speed of C or Fortan with the flexibility and range 
+of Python, may be the datascience language of the future. Julia looks a lot like Python and can use many Python libraries. </p>
+	<ul>
+		<li>A Deep Introduction to Julia for Data Science:
+			<a href="http://ucidatascienceinitiative.github.io/IntroToJulia/"> 
+				http://ucidatascienceinitiative.github.io/IntroToJulia/</a> [Github], UC Irvine Data Science.</li>
+		<li>Julia is developing <a href="https://juliadiffeq.org/2020/03/23/DAE.html">Differential Equation integrators</a>  written 
+			in pure Julia, from the <a href="https://juliadiffeq.org/">JuliaDiffEq organization</a>, March 23, 2020.</li>	
+	</ul>
+<hr>	
+<h1>Alt Currencies and Mining </h1>
+<p> Because of time constraints we don't explore crypto-currencies much in this class. But many students interested in financial modeling
+are likely to be curious about alternative currencies and the block chain. Here is some interesting material, including using Python to
+make your own blockchain. Some of this could be helpful in a job interview!</p>
+	<ul>
+		<li>Detailed BitCoin primer:
+			<a href="http://adilmoujahid.com/posts/2018/03/intro-blockchain-bitcoin-python/">
+				http://adilmoujahid.com/posts/2018/03/intro-blockchain-bitcoin-python/</a> including Python blockchain.</li>
+		<li>Math model setting coin price floors : 
+			<a href="https://medium.com/ledgercapital/how-to-value-crypto-by-cost-of-production-introducing-p-p-30950d184ab4"> 
+				https://medium.com/ledgercapital/how-to-value-crypto-by-cost-of-production-introducing-p-p-30950d184ab4 </a>
+				at the marginal cost of mining.</li>
+		<li>Developing a blockchain in Python: 
+			<a href="https://hackernoon.com/learn-blockchains-by-building-one-117428612f46"> 
+				https://hackernoon.com/learn-blockchains-by-building-one-117428612f46</a></li>	
+		<li>Another blockchain in Python:
+			<a href="https://github.com/EricAlcaide/pysimplechain/"> https://github.com/EricAlcaide/pysimplechain/</a></li>		
+	</ul>
+<hr>
+<h1>Live Crypto-Currency Quotations</h1>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/cryptocurrencies/prices-all/" 
+	rel="noopener" target="_blank"><span class="blue-text">Cryptocurrency Markets</span> by TradingView</a></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+  {
+  "width": "100%",
+  "height": "400",
+  "defaultColumn": "overview",
+  "screener_type": "crypto_mkt",
+  "displayCurrency": "USD",
+  "locale": "en"
+}
+  </script>
+</div>
+<!-- TradingView Widget END -->
+<!---
+ Master line follows:
+		<li>Open: <a href="URL"> 
+			URL</a> Close</li>
+--->
+</div>  <!--- End of Main ---->
+<div id="footer" class="e136">
+&copy; 2020 Gary R. Evans. All Rights Reserved.<br>
+Artwork by Leslie Kahle of KahleCreative.
+</div>
+
+</body>
+
+</html>

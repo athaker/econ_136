@@ -1,0 +1,619 @@
+/* ========= Developed by Professor Gary R. Evans                =========== */
+/* ========= Original version  August 25, 2015            ================== */
+/* ========= This date and version: 1.1 January 13, 2017        ============ */
+/* ========= printsheet.css                  =============================== */
+/* ========= This is for printing only, and converts backgrounds    ======== */
+/* ========= to white and text to black.  Version of pitssheet.css  ======== */
+
+/* ===============  LAYOUT SECTION  ========================= */
+
+body  {
+	background-color: #FFFFFF;
+	width: 8in;
+	margin: auto;
+	font-family: Times New Roman, Times, serif;
+	font-size: 0.8em; 
+}
+
+@media print {
+tr {page-break-inside: avoid;}
+p {page-break-inside: avoid;}
+}
+/* =========  Econ 53 specific colors and pages ======================*/
+
+#e53bod  {
+
+	background-color: white;
+}
+
+
+.e53  {
+	background-color: white; /* Deep blue (nav bar) */
+	color: black;
+}             
+
+.e53main  {
+	background-color: white;
+	border-style: solid;
+	border-width: 2px;
+}
+
+.e53main h1  {
+	color: #black;            /* Deeper blue */
+}
+
+
+/* ========== END Econ 53 colors and pages END  ====================*/
+
+/* =========  Econ 104 specific colors and pages ======================*/
+
+#e104bod  {
+
+	background-color: white;  /* Grey */
+}
+
+
+.e104  {
+	background-color: white;  /* Deep green */        
+	color: black;               /* This is for the nav bar */
+}             
+
+.e104main  {
+	background-color: white;  /* Slight off white */
+	border-style: solid;        /* This is the color of the text part of the page */
+	border-width: 2px;
+}
+
+.e104main h1  {
+	color: #black; /* Olive green primary text color */
+}
+
+/* ========== END Econ 104 colors and pages END  ====================*/
+
+/* =========  Econ 136 specific colors and pages ======================*/
+
+#e136bod  {
+
+	background-color: white;  /* Off white */
+}
+
+
+.e136  {
+	background-color: white;  /* Black/red */        
+	color: black;               /* This is for the nav bar */
+}             
+
+.e136main  {
+	background-color: white;  /* Slight off white */
+	border-style: solid;        /* This is the color of the text part of the page */
+	border-width: 2px;
+
+	
+}
+
+.e136main h1 h2  {
+	color: black; /* Red black primary text color */
+}
+
+/* ========== END Econ 136 colors and pages END  ====================*/
+
+
+/* =========  HSA10 specific colors and pages ======================*/
+
+#hsa10bod {
+
+	background-color: white;  /* Very light grey */
+	color: black;               /* Primary text color  */
+}
+
+.hsa10 {
+	background-color: #white; /* Close to black */
+	color: black;            /* Text level light grey  */
+}
+
+.hsa10main  {
+	background-color: white;
+	border-style: solid;
+	border-width: 2px;
+
+}
+
+.hsa10main h1 {
+	color: black;          /* H1 text dark grey */
+}
+
+/* ========== END HSA10 colors and pages END ========================*/
+
+/* =========  SS147 specific colors and pages ======================*/
+
+#ss147bod {
+
+	background-color: white;  /* Mid gray */
+	color: black;               /* Primary text color  */
+}
+
+.ss147 {
+	background-color: white; /* Mid gray nav bar */
+	color: black;             /* Text level light grey  */
+}
+
+.ss147main  {
+	background-color: white;  /* Slight off white */
+	border-style: solid;
+	border-width: 2px;
+
+}
+
+.ss147main h1 h2 {
+	color: black;          /* H1 text dark gray */
+}
+
+
+/* ========== END SS147 colors and pages END ========================*/
+
+
+#banner  {
+	height: 145px;  
+	margin: 6px 10px 4px 10px; /* TRBL */
+	/*   box-shadow: 8px 4px 4px #888888;  */
+}
+
+#banner img  {
+	height: 145px; 
+	border-radius: 5px;
+	width: 100%;
+}
+
+#header  {
+	margin: 6px 10px 0px 10px;
+	height: 140px;
+	border-radius: 5px;
+	text-align: center;
+	padding-top: 28px;
+}
+
+#header img {
+	/*  See h3 below for an explanation of these commands */
+	margin: 0px;
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);  /* IE */
+	-ms-transfrom: translateY(-50%);  /* Chrome, Safari, Opera */
+	-moz-transform: translateY(-50%);  /* Mozilla */
+	transform: translateY(-50%);
+	border-radius: 10px;
+}
+
+	
+#navbar ul { 
+	padding: 8px 2px 0px 2px;
+	margin: 4px 10px 4px 10px;
+	list-style-type: none;
+	text-align: center;
+	height: 28px; 
+	border-radius: 5px;
+}
+
+#navbar ul li {
+	display: inline;
+}
+
+#navbar ul li a {
+	text-decoration: none; /* Gets rid of the URL underline */
+	font-family: Arial;
+	padding: 0.2em  3em;
+	border-radius: 3px;
+	color: black;
+	font-size: 0.6em;
+	background-color: white; 
+}
+
+#navbar ul li a:hover {
+	/*  color: #3D1F00;  */
+	background-color: black;
+	color: white;
+}
+
+#bpoints ul {
+	color: #404040;
+	font-size: 1.0em;
+}
+
+.intern  {
+	font-family: Times New Roman, Times, serif;
+	font-size: 90%;
+	color: black;
+}
+
+#main  {
+	/* This is called only if there is no rightbar on the page */
+	margin: 4px 10px 4px 10px;    /* TRBL */
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 1.0em;
+	height: auto;
+}
+
+#mainleft  {
+	/* This is called if there is a rightbar (see class rightbar below).  */
+	margin: 4px 320px 4px 10px;  /*260+20+20+10+10*/
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 1.0em;
+	height: auto;
+}
+
+ul.a  {
+	list-style-type: none;
+}
+
+ul.a li {
+	display: inline;
+	font-size: 60%
+}
+
+ul.a li a {
+	text-decoration: none;
+	padding: 0.2em 2em;
+	border-radius: 3px;
+	color: black;
+	background-color: white;
+}
+
+ul.a li a:hover {
+	color: black;
+	background-color: white;
+}
+
+ul.classes  {
+	list-style-type: none;
+}
+
+ul.classes li {
+	display: inline;
+	font-size: 90%
+}
+
+ul.classes li a {
+	text-decoration: none;
+	padding: 0.2em 2em;
+	border-radius: 3px;
+	color: white;
+	background-color: #693600;
+}
+
+ul.classes li a:hover {
+	color: black;
+	background-color: white;
+}
+
+#rightbar  {
+	margin: 0px 10px 5px 10px;  /* TRBL */
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 105%;
+	float: right;
+	width: 260px; /* See mainleft margin above */
+	clear: right; /* Stacks sidebars vertically */
+}
+
+#rightlabel  {
+	margin: 0px 10px 5px 10px;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-size: 105%;
+	float: right;
+	width: 260px; /* See margin right above */
+	clear: right; /* Stacks sidebars vertically */
+}
+
+#rightimage  {
+	margin: 5px 10px 5px 10px;
+	border-radius: 5px;
+	float: right;
+	width: 300px; /* We got rid of the padding */
+	clear: right; 
+	opacity: 1.0;
+	transition: opacity 0.5s ease-in-out;
+
+}
+
+.rightimage:hover {  /* adds an attribute to a class ...
+   	... no space after the colon */
+   	opacity: 0.4;
+}
+
+#footer {
+	margin: 4px 10px 4px 10px;
+	height: 50px;
+	border-radius: 5px;
+	text-align: center;
+	padding: 15px;
+	font-size: 90%;
+	clear: both; /* Prevents sidebars from sitting atop the footer. */
+}
+
+#footer ul {   
+	padding: 5px;
+	margin: 10px;
+	list-style-type: none;
+	text-align: center;
+	/*  height: 35px;  */
+	border-radius: 5px;
+}
+
+#footer ul li {
+	display: inline;
+}
+
+#footer ul li a {
+	text-decoration: none; /* Gets rid of the URL underline */
+	font-family: Arial;
+	padding: 0.2em  6em;
+	border-radius: 3px;
+}
+
+#footer ul li a:hover {
+	color: black;
+	background-color: white;
+}
+
+/* ===============  HEADINGS SECTION  ========================= */
+
+
+h1  {
+	font-size: 1.2em;
+}
+
+h2  {
+	font-size: 1.0em;
+}
+
+h3  {
+	/*  This was used when there was no image for a banner */
+	/*  Although this is not likely used currently,        */
+	/*  it should be retained for reference for text       */
+	/*  banner centering.                                  */
+	font-size: 300%;
+	text-align: center;
+	color: #CC8000;
+	font-family: Times New Roman, Times, serif;
+	margin: 0px; /* Necessary because h3 is at the top of page */
+	/*  This complex set of commands is to center vertically  */
+	/*  See w3schools CSS3 transform property to understand */
+		position: relative;
+		top: 40%;
+		-webkit-transform: translateY(-50%);  /* IE */
+		-ms-transfrom: translateY(-50%);  /* Chrome, Safari, Opera */
+		-moz-transform: translateY(-50%);  /* Mozilla */
+		transform: translateY(-50%);
+	/*  End of vertical centering commands */
+	/*  Try this:  border: 3px solid #8AC007;  */
+}
+
+h4  {
+	/*   position: absolute;  */
+	/*   top: 32px;           */
+	width: 100%;
+	font-size: 300%;
+	text-align: center;
+	font-family: Times New Roman, Times, serif;;
+	margin: 0px;
+
+}
+
+h5  {
+	font-size: 0.9em;
+	text-align: center;
+	margin: 0px;
+}
+
+/* ===============  TABLE SECTION        ========================= */
+/* == Tasks is used for calendar tables for HSA10 & Econ 53 ====== */
+
+
+#tasks  {
+	font-family: Times New Roman, Times, serif;	
+	width: 99%;             
+	margin: 0px 0px 4px 8px;
+	border-radius: 5px;
+        border: none;
+	background-color: white;
+	/*  border: 2px solid #693600 ;  */
+	/*  border-collapse: collapse;   */
+}
+
+
+#tasks th {
+    	font-size: 140%;  /*  Temporary note: This was 110% for ss147cc  */
+    	text-align: center;
+    	vertical-align: center;     
+	/*    border: 2px solid #693600 ;  */
+	height: 38px;
+    	border-radius: 5px;
+    	padding-top: 6px;
+    	padding-bottom: 6px;
+}
+
+#tasks td  {
+    	font-size: 1.0em;  /*  This was 1.0em; for ss147cc */
+    	text-align: left;
+    	border: 2px solid black ;
+	border-radius: 5px;
+    	vertical-align: center;
+    	padding: 10px;
+}
+
+#tasks td a {
+    	font-size: 100%;
+    	/*  font-weight: bold;	*/
+    	/*  text-decoration: none; */ /* Gets rid of the URL underline */
+       
+}
+
+
+#tasks td a:hover {
+    	color: black; /*  #3D1F00; */
+    	background-color: white;   
+}
+
+
+#tasks tr.alt td {
+    	color: black;
+    	background-color: white;
+}
+
+#tasks tr.s147fs td {
+	font-size: 100%;    /* This is for SS147 calendar font (smaller) */
+}
+
+#tasks tr td.e53x1 {        /* First used for first column of e53CC         */
+	background-color: white;
+	font-weight: bold;
+	text-align: center;
+	font-size: 160%;
+}
+
+#tasks tr td.e136x1 {        /* Used for first column of e136CC         */
+	background-color: white;
+	font-weight: bold;
+	text-align: center;
+	font-size: 160%;
+	color:black;
+}
+
+#tasks tr td.e136x2 {        /* Used for non-first columns of e136CC         */
+	background-color: white;
+	padding-left: 60px;
+	
+}
+
+/* ===============  End of tasks section          ========================= */
+
+
+
+/* ===============  VIDEO GRID SECTION (vidgrid)  ========================= */
+/* ===============  Used for SS147 student videos ========================= */
+
+#vidgrid  {
+	font-family: Times New Roman, Times, serif;	
+	width: 100%;
+	margin: 5px;
+	border-radius: 5px;
+	font-size: 100%;
+        border: none;
+}
+
+#vidgrid th {
+    	font-size: 120%;
+    	text-align: center;
+    	vertical-align: center;
+        border: 2px solid; 
+    	border-radius: 5px;
+    	padding-top: 10px;
+    	padding-bottom: 10px;
+    	color: black;
+    	background-color: white;
+}
+
+#vidgrid td  {
+    	width:320px;
+    	font-size: 100%;
+    	text-align: left;
+    	border: 2px solid;
+	border-radius: 5px;
+    	vertical-align: center;
+    	padding: 10px;
+    	background-color: white;
+    	border-collapse: collapse;  
+}
+
+
+#vidgrid td a {
+    	font-size: 100%;
+    	font-weight: bold;	
+    	text-decoration: none;
+       
+}
+
+
+#vidgrid td a:hover {
+
+    	color: black;
+    	background-color: white;   
+}
+
+.vidimage  {
+	margin: 5px;
+	padding: 5px;
+	background-color: white;
+	text-align: center;
+}
+
+.vidimage iframe {
+	width: 300px;
+	height: 220px;
+	border: none;
+}
+
+/* =============      END VIDEO GRID SECTION (vidgrid)  =================== */
+
+/* ===============  TABLE SECTION (chapters)  ========================= */
+
+
+#chapters  {
+	font-family: Times New Roman, Verdana, Georgia;	
+	font-size: 22 px;
+	width: 98%;
+	margin-left: 14px;
+        margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	border-radius: 5px;
+	font-size: 100%;
+	border: none;
+/*  	border-collapse: collapse;  */
+}
+
+#chapters th {
+    font-size: 120%;
+/*    border: 2px solid #296200;    */
+    text-align: center;
+    vertical-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+}
+
+#chapters td  {
+    font-size: 100%;
+    text-align: left;
+    vertical-align: center;
+/*    border: 2px solid #296200;    */
+    padding: 10px;
+    background-color: white;
+}
+
+#chapters td a {
+    font-size: 120%;
+    font-weight: bold;	
+    text-decoration: none; /* Gets rid of the URL underline */
+       
+}
+
+
+#chapters td a:hover {
+
+    color: black;
+    background-color: white;   
+}
+
+/* ===============  END END END END END END   ========================= */
+
+
+
+
+
+

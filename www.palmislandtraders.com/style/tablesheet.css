@@ -1,0 +1,241 @@
+/* ========= Developed by Professor Gary R. Evans                =========== */
+/* ========= Origin:  August 19, 2015                 ====================== */
+/* ========= This date: January 8, 2016               ====================== */
+/* ========= This version 1.3 (cleaned up)                      ============ */
+/* ========= tablesheet.css                  =============================== */
+/* ========= This is designed for a table web page, specifically          == */
+/* ========= the chapter selection page for the Econ 104 book.       ======= */
+/* ========= Also used as the master for the Econ 104 pages.         ======= */
+
+/* ====================      LAYOUT SECTION        ========================= */
+
+body  {
+	background-color: #A9A9A9;
+	margin: 4px;
+	font-family: Times New Roman, Times, serif;
+	max-width: 1244px;
+	min-width: 840px;
+	font-size: 20px;
+	margin: auto;
+}
+
+#banner  {
+	height: 145px;
+	margin: 4px 10px 0px 10px; /* TRBL  */
+}
+
+#banner img  {
+	height: 145px;
+	border-radius: 5px;
+	width: 100%
+}
+
+
+#header  {
+	background-color: #295200;
+	margin: 4px 10px 4px 10px;
+	height: 140px;
+	border-radius: 5px;
+	text-align: center;
+	padding-top: 28px;
+}
+
+#pagebreak {
+	background-color: #003300; /*  #295200; */
+	margin: 0px 10px 0px 10px;
+	height: 60px;
+	border-radius: 5px;
+	text-align: center;
+}
+
+#navbar ul {   
+	background-color: #003300;  /*  #295200;  */
+	padding: 2px;
+	margin: 4px 10px 4px 10px;
+	list-style-type: none;
+	text-align: center;
+	height: 28px; 
+	border-radius: 5px;
+}
+
+#navbar ul li {
+	display: inline;
+}
+
+#navbar ul li a {
+	text-decoration: none; /* Gets rid of the URL underline */
+	font-family: Arial;
+	padding: 0.2em  3em;
+	border-radius: 3px;
+	color: white;
+	font-size: 12px;
+	background-color: #142900;
+}
+
+#navbar ul li a:hover {
+	color: #3D1F00;
+	background-color: white;
+}
+
+.main  {
+	background-color: #FAF7F2;
+	margin: 4px 10px 6px 10px;
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 100%;
+}
+
+
+#footer {
+	background-color: #295200;
+	margin: 10px;
+	height: 40px;
+	border-radius: 5px;
+	color: white;
+	text-align: center;
+	padding: 15px;
+	font-size: 90%;
+	clear: both; /* Prevents sidebars from sitting atop the footer. */
+}
+
+#footer ul { 
+	background-color: #295200;
+	padding: 5px;
+	margin: 10px;
+	list-style-type: none;
+	text-align: center;
+	/*  height: 35px;  */
+	border-radius: 5px;
+}
+
+#footer ul li {
+	display: inline;
+}
+
+#footer ul li a {
+	text-decoration: none; /* Gets rid of the URL underline */
+	font-family: Arial;
+	padding: 0.2em  6em;
+	border-radius: 3px;
+	color: white;
+	background-color: #295200;
+}
+
+#footer ul li a:hover {
+	color: #3D1F00;
+	background-color: white;
+}
+
+/* ===============  HEADINGS SECTION  ========================= */
+
+
+h1  {
+	font-size: 26px;
+	color: #393F12;
+}
+
+h2  {
+	font-size: 26px;
+	color: #515A19;
+}
+
+h3  {
+	/*  This was used when there was no image for a banner */
+	font-size: 140%;
+	text-align: center;
+	/*  color: black;  */ color: #A3B862;
+	font-family: Times New Roman, Times, serif;
+	margin: 0px; /* Necessary because h3 is at the top of page */
+	/*  This complex set of commands is to center vertically  */
+/*  See w3schools CSS3 transform property to understand */
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);  /* IE */
+	-ms-transfrom: translateY(-50%);  /* Chrome, Safari, Opera */
+	-moz-transform: translateY(-50%);  /* Mozilla */
+	transform: translateY(-50%);
+/*  End of vertical centering commands */
+/*  Try this:  border: 3px solid #8AC007;  */
+}
+
+h4  {
+	font-size: 180%;
+	text-align: center;
+	color: #A3B862;
+	font-family: Times New Roman, Times, serif;
+	margin:  0px;
+
+}
+
+h5  {
+	font-size: 140%;
+	text-align: center;
+	color: #A3B862;
+	margin: 0px;
+
+}
+
+
+
+/* ===============  TABLE SECTION (chapters)  ========================= */
+
+
+#chapters  {
+	font-family: Times New Roman, Times, serif;	
+	font-size: 22 px;
+	background-color: #FAF7F2;
+	width: 98%;
+	margin: 4px 10px 4px 10px;
+	border-style: solid;
+	border-width: 2px;
+	border-radius: 5px;
+	font-size: 100%;
+/*   	border-collapse: collapse;  */
+}
+
+#chapters th {
+    font-size: 120%;
+    border: 2px solid #A9A9A9;
+    border-radius: 5px;    
+    text-align: center;
+    vertical-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+/*    background-color: #FAF7F2;  */
+}
+
+#chapters td  {
+    font-size: 100%;
+    text-align: left;
+    vertical-align: center;
+    border: 2px solid #A9A9A9;
+    border-radius: 5px;    
+    padding: 10px;
+/*    background-color: #FAF7F2;   */
+}
+
+#chapters td a {
+    font-size: 120%;
+    font-weight: bold;	
+    text-decoration: none; /* Gets rid of the URL underline */
+       
+}
+
+
+#chapters td a:hover {
+
+    color: white; /*  #3D1F00; */
+    background-color: #142900;   
+}
+
+
+#chapters tr.alt td {
+    color: #003366;
+    background-color: #FAF7F2;
+}
+
+
+
+
+
+

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!---  This is the master course outline for Econ136, which uses pitssheet.css--->
+<!---  Begun on December 28, 2016, filed in Dropbox/CSSHTML/                  --->
+<!---  This started as a modification of the E53 CO file                      --->
+<!---  This is version e136co.1.2  Dated December 31, 2017                    --->
+<!---  This was converted to a secure page on June 6, 2017               -------->
+
+<html>
+
+<head>
+<title>Economics 136 Course Outline</title>
+<meta charset="UTF-8">
+<meta name="description" content="Course Outline for Economics 136">
+<meta name="keywords" content="HMC, Harvey Mudd College, economics, macroeconomics, finance, palmislandtraders, palm island traders,
+	course outline, calendar, content, stock market, bond, note, option, put, call, futures, derivatives, algo, algorithm, high-speed
+	trading, arbitrage, credit, interest rates">
+<meta name="author" content="Gary R. Evans">
+<!---
+<link type="text/css" rel="stylesheet" href="pitssheet.css" media="screen" >
+--->
+<link type="text/css" rel="stylesheet" href="../style/pitssheet.css" media="screen" >
+
+<link type="text/css" rel="stylesheet" href="../style/printsheet.css" media="print" >
+</head>
+<body id="e136bod">
+<div id="banner">
+<!---
+<img src="e136cobanner.jpg">
+--->
+<img src="../images/e136cobanner.jpg">
+
+</div>
+<div id="navbar"> 
+	<ul class="e136">
+		<li><a href="e136cc.htm">E136 Course Calendar</a></li>
+		<li><a href="e136ls.htm">E136 Lecture Slides</a></li>
+		<li><a href="e136lit.htm">E136 Support Material</a></li>
+		<li><a href="../mudd/hmcgre.html">Prof E's Courses</a></li>
+	</ul>
+</div>
+
+
+<div id="main" class="e136main"> 
+<h1>Course Outline for Spring 2020</h1>
+<p>Welcome to my course on financial derivatives and modeling.  This is the second course of two finance 
+courses offered to students at Harvey Mudd College. This course is designed to be an extension of 
+Economics 104, my introductory finance course, <b>which is a prerequisite for this course</b>. 
+</p>
+<p>To get a better idea of the topics that we are going to cover, look at the 
+<a href="e136cc.htm">Course Calendar</a>.
+The topics to be covered include a review of measures of risk and volatility, modeling 
+of put and call options, futures, and a lot of advanced theory.  
+We give special emphasis to understanding and using value and pricing models and volatility models. You will
+be exposed to a lot of advanced trading theory.
+</p>
+<p>
+</p>You also experiment with some data gathering and algorithmic program trading models. We write our own models 
+in Python and there is a substantial amount of that kind of modeling.
+<h1>Course Objectives</h1>
+<p>Mostly we want to explore the exotic and fascinating world of financial derivatives.  We will begin 
+by simply understanding how they work and for what purpose they are used.  Then we probe a little more 
+deeply to develop rational explanations of their pricing and valuation, then discuss arbitrage, 
+hedging and trading possibilities. By the end of the class, students should feel comfortable about 
+much of this complex financial environment.
+</p>
+<p>Some of you may choose to work in finance for quant funds or trading houses as investment analysts 
+or quant traders. Every year we seem to place more students into this industry 
+(why? <i>because they love Mudd quants!!</i>). This course is carefully tailored to expose you to some 
+of the fundamental modeling and analysis common to this field. As a one-semester course we can only
+emphasize certain topics while ignoring others but at least you can get a taste of what is involved.
+</p>
+<h1>Prerequisites</h1>
+<p>This course <i><b>requires</b></i> that you have taken <b>Economics 104 - Financial Economics
+</b> or the equivalent at 
+another college.  Generally, a student in this class must be very familiar with the structure and 
+operations of equity and bond markets because this course covers the market for derivatives that are 
+derived from those fundamental markets.  There is no review of those markets in this class.  
+It is assumed that you know this material already. 
+</p>
+<p>We are also going to do a lot of financial modeling using the 
+<b>Python</b> programming language. You <b>must</b> know how to use Python and also know or be willing
+to learn Numpy and Pandas. Some programming will be done in 
+the classroom in a cooperative team environment which may make this a little easier.
+</p>
+<p>Any student enrolled in this class should have a substantial math background. 
+Harvey Mudd students should have no problems but if you are from another campus and have a 
+limited math background you might want to look at some of the later lectures from last year 
+(posted on the bottom of the 
+<a href="e136ls.htm">E136 Lecture Slides</a> page) 
+to see if you can 
+understand the material. Generally, you should understand natural logs and how they work, 
+be able to use multi-variable calculus, be able to use or be prepared to learn Fourier
+Transforms and be prepared to use multiple applications of the kind of statistics that are
+used in Econometrics.
+</p>
+<h1>The Course Calendar</h1>
+<p>Either now or when you complete this course outline you should consult the 
+<a href="e136cc.htm">Course Calendar </a> 
+for this class. Unlike my practice in other classes that I teach, there are 
+no links to reading or other assignments on the Course Calendar. Instead, 
+all links to lectures, videos, reading, homework and other assignments are 
+found on the 
+<a href="e136ls.htm">Lecture Slides </a>page. 
+Instead, the Course Calendar lays out the all-important online quiz dates and exam dates and other 
+critical deadlines while showing how the course is divided into eight modules. 
+Within those modules various topics are listed in the order in which they will 
+likely be presented. As that document points out, though, as the class proceeds 
+some of these topics might be blended, rearranged, supplemented, or even abandoned. 
+Some of the modules are taught simultaneously. This is <b>not</b> a linear course!
+</p>
+<p>Most of the models presented in this class are prepared before the class was
+offered. However, these are large, complex models, always in some stage of development,
+so we spend a fair amount of time together, teacher and students, continuing to improve
+and enhance the models. 
+</p>
+I  also add change material 
+based in part upon the continuous dialog that I have with my students. You often 
+come up with other interests that we pursue and you sometimes come up with better 
+ways of presenting this complex material. And every now and then students will 
+find a mistake in the material (especially the math) so we correct it and press on.
+</p>
+<h1>Reading Material and Homework Assignments</h1>
+<p>There is no textbook formally assigned to this course. There used to be, but 
+the textbook used was intended for graduate-level instruction and as this course 
+was refined over the years, the content drifted away from the text material, 
+becoming specialized for Mudd students and applications that are interesting for 
+that cohort. Additionally the course now has a major component dedicated to modeling with
+Python, which is not discussed in the old text. Therefore we now use the text but only as 
+an <b>optional reference</b> source. 
+It is up to you to decide whether you want to buy it. The textbook is quite good 
+(although very difficult to read) - it is the educational bible for this kind of course. 
+You might decide to share with another student and to <b>buy an older out-of-print 
+edition</b> (there is no meaningful loss in content at all). A new edition of the text is 
+over-priced ($229!). The textbook in question is <b><i>Options, Futures, and Other Derivatives,</i></b>
+by John C. Hull, 10th edition, ISBN 013447208X <b>or any edition if you can get it cheaper</b>.  
+Do not buy this book before we meet for the first time. 
+</p>
+<p>Much of our class information comes from some very detailed PowerPoint slides that 
+I will use in my lectures and from posted video lectures.  We will also rely upon a lot of 
+reading material that is 
+available free from the internet.  When the time comes we will simply find it (
+I provide the URLs), download it, print it (maybe), and read it, all for free!  
+The internet has proven to be an increasingly reliable source of good material for 
+courses like this. All slides for my lectures are posted before the lecture on the 
+<a href="e136ls.htm">Lecture Slides </a>web page.
+</p>
+<p>We also have some interactive course assignments which are typically Python programs.  
+Some of these we will do together in class, and some you will do after class 
+hours. These assignments also will be made available on the 
+<a href="e136ls.htm">Lecture Slides </a>web page. 
+Postings to this page will be made as the class proceeds. I will tell you during lectures 
+when it is time to do one of these assignments.  These homework assignments are typically 
+not corrected and are not graded, but quiz and exam questions are sometimes based upon these 
+assignments and in some cases I may require you to bring the completed assignment to the 
+examination to extract material for exam questions.
+</p>
+<p>This class now <b>requires</b> that you and your team do your modeling in Python. You must have
+access (typically through your laptop) to Python 3 (we do not allow Python 2 to be used in this 
+class). Your teacher knows that <b>MatLab</b> and <b>R</b> are extremely powerful packages that can be used for 
+finance, and <b>MatLab</b> documentation is better than Python documentation, but we will all be working
+with Python 3. This is not an option.</p>
+<p>Whereas I do not care which IDE you use with Python, I strongly recommend that you download the 
+<b>Anaconda</b> distribution of Python 3, because it has all of the libraries that we will want to use.
+This will be discussed in an early lecture.
+</p>
+<h1>Class Attendance Requirements</h1>
+<p>Because we are trading collectively and working together on homework projects and algos, 
+in this class <b>attendance is mandatory</b>. If you have had me for other large lecture courses 
+you know that I don't have such a requirement there but this class is different. You are 
+required to attend every session unless you have a reasonable excuse. And if you have a 
+reasonable excuse (which I certainly allow) you must email me prior to the class to inform 
+me why you will be absent. I am not likely to answer the email.
+</p>
+<p><b>Do not take this class unless you understand this attendance rule and agree to abide by it.</b> 
+I will grade you down if you make a habit of missing classes regardless of how you perform on exams.
+</p>
+<p>You are also required to bring a laptop to class every time we meet.
+</p>
+<h1>Team Assignments</h1>
+<p>Early in the semester I am going to ask the class to divide into teams of five people each (give or
+take one). Each team will be given some work assignments, mostly for background research. The class 
+will also be asked to do some supplementary coding in the classroom on certain days and these assignments
+are undertaken by teams rather than individuals. The role played by teams will be discussed in early 
+lectures.
+</p>
+<h1>Examinations and Grades</h1>
+<p>Your grade for this course will be based upon your accumulated scores from two online quizzes, a
+midterm exam (either both online and essay or online only), a final in-class exam, and a final online exam, plus a small team score based upon class
+projects. Also, as stated above, your score can be adjusted down due to lack of attendance.
+</p>
+<p>The online quizzes will be taken in the last 20 minutes of class time on the dates scheduled in 
+the <a href="e136cc.htm">Course Calendar</a>. 
+</p> 
+<h2>Grade weighting: </h2>
+<div id="bpoints">
+	<ul>
+		<li>Twenty-minute online quizzes: <b>15% each</b></li>
+		<li>Mid-term exam (including online portion): <b>30%</b></li>
+		<li>Final exam (including online portion): <b>30%</b></li>
+		<li>Team participation and class attendance: <b>10%</b></li>
+	</ul>
+</div>
+<p>The final
+10% of your grade will be determined by your contribution to class and team projects, including class
+attendance. With reasonable good-faith effort, you should be able to get full credit for this 10% of
+your grade.
+</p>
+<p>
+Your final grade will be based upon a final distribution for the class after the scores above have been posted. 
+The cutoff points for different letter grades are not determined until I have evaluated that final 
+distribution. If you are concerned about your grade prior to the final, do not ask me what score 
+you will have to earn to meet your grade target. I will not know because I will not have seen the 
+final distribution. I don’t (really can’t) give extra credit assignments to compensate for low exam 
+scores. There is no extra credit and there are no makeups.
+</p>
+<p>
+You have the right to appeal a grade on an exam so long as the following procedure is used: 
+</p>
+<p>To appeal a grade on an essay exam question, you must submit to me the basis of your complaint (explaining 
+why you should have been given a higher score) in writing on an 8 1/2" by 11" sheet of paper 
+within a week of receiving back your graded exam. I will be willing to talk to you at length about 
+your exam, but not about changing the score on your exam, unless you have first followed the procedure 
+above.  To this rule I make one exception: if I have improperly posted your grade because 
+I made a mistake adding the score, you need only tell me.
+</p>
+<p>
+<b>Policy on Pass/No Pass: I automatically allow any student who wishes to take the course on a 
+P/NP basis to do so if the student is eligible. HOWEVER, to receive a passing grade the student 
+must have accumulated enough points to receive the equivalent  C- or better! Prior to the final, 
+do not ask me how many points you must earn on the final to pass. I will not tell you because I 
+will not know. Your final grade will depend upon the final distribution after the final has been 
+taken. Also, if you are P/NP status, to earn a passing grade for this class, regardless of your 
+prior scores, <font color="red"> you must pass the final exam in-class exam and the final take-home 
+exam </font> if one is assigned. If you 
+receive a score on the final exam alone that I deem to be a failing grade, and you are registered 
+as a P/NP student, I will assign an NP for the course.</b> This policy does not necessarily apply to 
+students taking the course for a grade (because you are merely going to get a very low grade, 
+possibly an F).
+</p>
+<h1>About the somewhat unstructured nature of this course</h1>
+<p>This course covers some very complex material at a very advanced level. This course is taught 
+at a level used in the second year of a Ph.D. program in finance (based upon the book used in 
+this course). This material can be very challenging for both the student and the teacher. This 
+stuff is difficult to teach. Also this course is extremely lecture-dependent. The reference 
+reading material is difficult to understand without explanation. Further, although the scheduling 
+of material in this course appears to be linear - we actually work simultaneously on different tasks, 
+as is explained in the <a href="e136cc.htm">Course Calendar</a>.
+Also, the pace of progress varies because I will not move on from one topic to the next until I am 
+sure the class understands it (it builds in the major sections - if you don't understand step 1 
+you won't understand step 2). I experiment with how I teach these topics. I constantly discard or change 
+lectures. Some thrusts fail. In some areas we have to backtrack.
+</p>
+<h1>Video and Audio</h1>
+<p>
+You are not allowed to use video or audio recording equipment in my classroom without my express 
+<i><b>written</i></b> permission (permission by email constitutes written permission). If you have some reason 
+to do it, you might ask and I might allow it. There are two reasons for this: (1) all of my material 
+including oral presentations is my copyrighted material and I have the right to control it, and more 
+important, (2) unauthorized recordings can have a stifling affect upon free and open speech. What goes 
+on in the classroom is between you and me, not you and me and everyone who watches YouTube.
+</p>
+<p>The <i><b>YouTube</b></i> live recordings that I use in some other courses 
+are not used in this course. On the other hand, a lot of the lecture material is presented as video. You 
+are as responsible for video content as you are in-class lectures.
+</p>
+<h1>How to Contact Me</h1>
+<p>
+Although I am often in my office, Parsons 1261, the best way to reach me is by appointment via email at 
+evans at g dot hmc dot edu. My formal office hours this semester are 
+after this class, from 9:30 until 10:30 on Tuesday and from 1:30 until 2:30 on Tuesday and Thursday 
+(but check by email).
+</p>
+<p>I look forward to working with you in this class. </p>
+
+
+</div>  <!--- End of Main ---->
+<div id="footer" class="e136">
+
+&copy; 2020 Gary R. Evans. All Rights Reserved.<br>
+Artwork by Leslie Kahle of KahleCreative.
+
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,357 @@
+/* ========= Developed by Professor Gary R. Evans         =========== */
+/* ========= Original   July 16, 2015          ====================== */
+/* =========  ssheetbrown.css, originally ssheetco.css         =======*/
+/* ========= Used for the SS147 brown color scheme and hmcgre  =======*/
+/* ========= THIS VERSION 3.1 DATED December 28, 2016           ========*/
+/* =========  [Cleaned up for general use]   =========================*/
+
+/* ===============  LAYOUT SECTION  ========================= */
+
+body  {
+	background-color: #E6D9BF;
+	margin: 4px;
+	font-family: Times New Roman, Times, serif;
+	font-size: 16px;  /* could be 1 em  */
+	max-width: 1244px;
+	min-width: 840px;
+	margin: auto;
+	
+}
+
+#banner  {
+	height: 120px;   /* Some of these banners are 145, not 120! */
+	margin: 4px 10px 4px 10px; /* TRBL */
+	box-shadow: 8px 4px 4px #888888;
+}
+
+#banner img  {
+	height: 120px;
+	border-radius: 5px;
+	width: 100%;
+}
+
+#header  {
+	background-color: #693600;
+	margin: 0px 10px 0px 10px;
+	height: 120px;
+	border-radius: 5px;
+	text-align: center;
+	/*  width: 100%;  */
+	/*  position: fixed; */
+}
+
+#header img {
+	/*  See h3 below for an explanation of these commands */
+	margin: 0px;
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);  /* IE */
+	-ms-transfrom: translateY(-50%);  /* Chrome, Safari, Opera */
+	-moz-transform: translateY(-50%);  /* Mozilla */
+	transform: translateY(-50%);
+	border-radius: 10px;
+}
+
+#notification {
+	background-color: #ffffcc;
+    width: 1000px;
+    border: 10px solid green;
+    padding: 25px;
+    margin: 25px;
+}
+	
+#navbar ul { 
+  	background-color: #693600;
+	padding: 8px 2px 0px 2px;
+	margin: 4px 10px 4px 10px;
+	list-style-type: none;
+	text-align: center;
+	height: 28px; 
+	border-radius: 5px;
+}
+
+#navbar ul li {
+	display: inline;
+}
+
+#navbar ul li a {
+	text-decoration: none; /* Gets rid of the URL underline */
+	font-family: Arial;
+	padding: 0.2em  3em;
+	border-radius: 3px;
+	color: white;
+	font-size: 12px;
+	background-color: #3D1F00; 
+}
+
+#navbar ul li a:hover {
+	color: #3D1F00;
+	background-color: white;
+}
+
+#bpoints ul {
+	color: #8F5A00;
+	font-size: 20px;
+}
+
+.intern  {
+	font-family: Times New Roman, Times, serif;
+	font-size: 100%;
+	color: black;
+}
+
+.main  {
+	/* This is called only if there is no rightbar on the page */
+	background-color: #FAF7F2;
+	margin: 10px;  /* Use this if no side bar, mainleft if sidebar */
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 110%;
+	height: auto;
+	box-shadow: 8px 4px 4px #888888;
+}
+
+.mainleft  {
+	background-color: #FAF7F2;
+	/* This is called if there is a rightbar (see class rightbar below).  */
+	margin: 10px 320px 10px 10px;  /*260+20+20+10+10*/
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 110%;
+	height: auto;
+}
+
+ul.a  {
+	list-style-type: none;
+}
+
+ul.a li {
+	display: inline;
+	font-size: 60%
+}
+
+ul.a li a {
+	text-decoration: none;
+	padding: 0.2em 2em;
+	border-radius: 3px;
+	color: white;
+	background-color: #693600;
+}
+
+ul.a li a:hover {
+	color: black;
+	background-color: white;
+}
+
+ul.classes  {
+	list-style-type: none;
+}
+
+ul.classes li {
+	display: inline;
+	font-size: 90%
+}
+
+ul.classes li a {
+	text-decoration: none;
+	padding: 0.2em 2em;
+	border-radius: 3px;
+	color: white;
+	background-color: #693600;
+}
+
+ul.classes li a:hover {
+	color: black;
+	background-color: white;
+}
+
+.rightbar  {
+	background-color: #FAF7F2;
+	margin: 6px 10px 10px 10px;
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 105%;
+	float: right;
+	width: 260px; /* See mainleft margin above */
+	clear: right; /* Stacks sidebars vertically */
+}
+
+.rightvid  {
+	background-color: #FAF7F2;
+	margin: 6px 10px 0px 10px;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-size: 105%;
+	float: right;
+	width: 260px; /* See margin right above */
+	clear: right; /* Stacks sidebars vertically */
+}
+
+.rightimage  {
+	margin: 6px 10px 10px 10px;
+	border-radius: 5px;
+	float: right;
+	width: 300px; /* We got rid of the padding */
+	clear: right; 
+	opacity: 1.0;
+	transition: opacity 0.5s ease-in-out;
+
+}
+
+.rightimage:hover {  /* adds an attribute to a class ...
+   	... no space after the colon */
+   	opacity: 0.4;
+}
+
+#footer {
+	background-color: #693600;
+	margin: 10px;
+	height: 50px;
+	border-radius: 5px;
+	color: white;
+	text-align: center;
+	padding: 15px;
+	font-size: 90%;
+	clear: both; /* Prevents sidebars from sitting atop the footer. */
+	box-shadow: 12px 8px 8px #888888;
+}
+
+#footer ul {   /* Note how we are changing only the ul element */
+	background-color: #693600;
+	padding: 5px;
+	margin: 10px;
+	list-style-type: none;
+	text-align: center;
+	/*  height: 35px;  */
+	border-radius: 5px;
+}
+
+#footer ul li {
+	display: inline;
+}
+
+#footer ul li a {
+	text-decoration: none; /* Gets rid of the URL underline */
+	font-family: Arial;
+	padding: 0.2em  6em;
+	border-radius: 3px;
+	color: white;
+	background-color: #693600;
+}
+
+#footer ul li a:hover {
+	color: #3D1F00;
+	background-color: white;
+}
+
+/* ===============  HEADINGS SECTION  ========================= */
+
+
+h1  {
+	font-size: 26px;
+	color:#8F5A00; /*  #CC8000; */
+}
+
+h2  {
+	font-size: 26px;
+	color: #CC8000;
+}
+
+h3  {
+	/*  This was used when there was no image for a banner */
+	font-size: 300%;
+	text-align: center;
+	color: #CC8000;
+	font-family: Times New Roman, Times, serif;
+	margin: 0px; /* Necessary because h3 is at the top of page */
+	/*  This complex set of commands is to center vertically  */
+	/*  See w3schools CSS3 transform property to understand */
+		position: relative;
+		top: 40%;
+		-webkit-transform: translateY(-50%);  /* IE */
+		-ms-transfrom: translateY(-50%);  /* Chrome, Safari, Opera */
+		-moz-transform: translateY(-50%);  /* Mozilla */
+		transform: translateY(-50%);
+	/*  End of vertical centering commands */
+	/*  Try this:  border: 3px solid #8AC007;  */
+}
+
+h4  {
+	position: absolute;
+	top: 32px;
+	width: 100%;
+	font-size: 300%;
+	text-align: center;
+	color: /*  #CC8000  */ #D69933  /* #693600 */ ;
+	font-family: Times New Roman, Times, serif;;
+	margin: 0px;
+
+}
+
+
+
+/* ===============  TABLE SECTION (tasks)  ========================= */
+
+
+#tasks  {
+	font-family: Times New Roman, Times, serif;	
+	font-size: 22 px;
+	width: 98%;
+	margin-left: 14px;
+        margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	border-radius: 5px;
+	font-size: 100%;
+        border: none;
+	/*	border: 2px solid #693600 ;   */
+	/*    	border-collapse: collapse;    */
+}
+
+#tasks th {
+    	font-size: 120%;
+    	text-align: center;
+    	vertical-align: center;
+	/*    border: 2px solid #693600 ;  */
+    	border-radius: 5px;
+    	padding-top: 10px;
+    	padding-bottom: 10px;
+    	color: #D69933;
+    	background-color: #693600;
+}
+
+#tasks td  {
+    	font-size: 100%;
+    	text-align: left;
+    	border: 2px solid #693600 ;
+    	vertical-align: center;
+    	padding: 10px;
+    	background-color: #FAF7F2;
+    	border-collapse: collapse;  
+}
+
+#tasks td a {
+    	font-size: 120%;
+    	font-weight: bold;	
+    	text-decoration: none; /* Gets rid of the URL underline */
+       
+}
+
+
+#tasks td a:hover {
+    	color: white; /*  #3D1F00; */
+    	background-color: #142900;   
+}
+
+
+#tasks tr.alt td {
+    	color: #003366;
+    	background-color: #FAF7F2;
+}
+
+
+
+
+/* ===============  END END END END END END   ========================= */
