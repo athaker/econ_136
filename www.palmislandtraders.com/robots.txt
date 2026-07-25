@@ -1,4 +1,0 @@
-Sitemap: http://palmislandtraders.com/sitemap.xml
-
-User-agent: *
-Disallow: 
