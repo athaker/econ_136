@@ -50,7 +50,9 @@ import kalshi_client as kc
 BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
 # Rehearsal without real money: https://demo-api.kalshi.co/trade-api/v2
 
-TICKER = "KXZEC15M-26AUG022030-30"   # override on the command line
+# No default ticker on purpose. Any hard-coded market goes stale — the one that
+# used to live here was a 15-minute crypto contract that expires the same hour.
+# Run --scan and pass the ticker explicitly.
 
 RUN_MINUTES = 15
 ORDER_SIZE = 1              # contracts per quote — $2.50 buys about two
@@ -67,9 +69,11 @@ FAIR_TRUST = 0.6            # shrink the microprice toward the plain mid; the
                             # rest is book noise, not information
 
 BALANCE_RESERVE = 0.25      # dollars kept unencumbered as a buffer
-STARTER_CROSS = False       # v2 crossed the spread for a guaranteed opening
-                            # fill; on a $2.50 account that is a real loss, so
-                            # we rely on the lean to earn a fill instead
+
+# v2 had STARTER_CROSS, which crossed the spread once at launch to guarantee a
+# visible fill on stage. It is gone rather than disabled: it is a deliberate
+# taker loss every run, and on a small account that is real money. The lean
+# earns a fill instead. Removed, not left as a dead switch.
 
 DRY_RUN = False
 SHOW_BALANCE = False        # sessions get recorded and posted — keep the
@@ -227,13 +231,17 @@ def affordable_size(qbid, qask, balance):
 
 def run_session(client, agent, ticker, market):
     title = market.get("title", "")
-    inventory = client.get_position(ticker)
+    try:
+        inventory = client.get_position(ticker)
+    except requests.RequestException as e:
+        event(f"could not read position ({e}); assuming flat")
+        inventory = 0.0
     if inventory:
         event(f"starting with existing inventory of {inventory:+g}")
 
     try:
         balance = client.get_balance_dollars()
-    except requests.HTTPError as e:
+    except requests.RequestException as e:
         event(f"could not read balance ({e}); assuming $0")
         balance = 0.0
 
@@ -248,7 +256,7 @@ def run_session(client, agent, ticker, market):
         nonlocal cash, fees, n_fills
         try:
             fills = client.get_fills(ticker, since_ts)
-        except requests.HTTPError:
+        except requests.RequestException:
             return
         for f in fills:
             fid = f.get("fill_id") or f.get("trade_id")
@@ -283,7 +291,7 @@ def run_session(client, agent, ticker, market):
             process_fills()
             try:
                 inventory = client.get_position(ticker)
-            except requests.HTTPError:
+            except requests.RequestException:
                 time.sleep(1)
                 continue
             if abs(inventory) < 0.005:
@@ -302,7 +310,7 @@ def run_session(client, agent, ticker, market):
                                        post_only=False)
                 print(f"  flatten attempt {attempt + 1}: {abs(inventory):g} @ "
                       f"{kc.cents(px)}")
-            except requests.HTTPError as e:
+            except requests.RequestException as e:
                 print(f"  flatten attempt {attempt + 1} rejected: {e}")
             time.sleep(1.5)
             try:
@@ -312,7 +320,7 @@ def run_session(client, agent, ticker, market):
         process_fills()
         try:
             inventory = client.get_position(ticker)
-        except requests.HTTPError:
+        except requests.RequestException:
             inventory = None
         if inventory:
             print(f"CRITICAL: still holding {inventory:+g}. Close it manually "
@@ -333,7 +341,7 @@ def run_session(client, agent, ticker, market):
         cycle += 1
         try:
             book = client.get_orderbook(ticker, depth=LADDER_DEPTH + 6)
-        except requests.HTTPError as e:
+        except requests.RequestException as e:
             event(f"waiting for market data ({e})")
             continue
 
@@ -343,7 +351,7 @@ def run_session(client, agent, ticker, market):
         process_fills()
         try:
             inventory = client.get_position(ticker)
-        except requests.HTTPError:
+        except requests.RequestException:
             pass
 
         micro = kc.microprice(bid, ask, bid_sz, ask_sz)
@@ -361,7 +369,7 @@ def run_session(client, agent, ticker, market):
                         banner = f"MARKET IS {str(st).upper()} — nothing to quote"
                         event(f"market status is {st}; stopping")
                         break
-                except requests.HTTPError:
+                except requests.RequestException:
                     pass
         state = [bid / 1000, ask / 1000, min(bid_sz, 1e4) / 1e4,
                  min(ask_sz, 1e4) / 1e4, fair / 1000,
@@ -372,7 +380,6 @@ def run_session(client, agent, ticker, market):
         # size to the cash actually available
         can = affordable_size(qbid, qask, balance)
         size = max(0, min(ORDER_SIZE, can))
-        note_extra = ""
         if size == 0 and not banner:
             banner = (f"NOT QUOTING — balance ${balance:.2f} cannot collateralize "
                       f"a two-sided lot (needs about $1.00)")
@@ -391,7 +398,7 @@ def run_session(client, agent, ticker, market):
                 events=EVENTS, banner=banner,
                 note=f"cycle {cycle} · fills {n_fills} · fees ${fees:.2f} · "
                      f"{agent.last_reason} · {int(deadline - time.time())}s left"
-                     f" · Ctrl-C = flatten{note_extra}")
+                     f" · Ctrl-C = flatten")
         else:
             print(f"| {kc.cents(bid)} x {kc.cents(ask)} | inv {inventory:+g} | "
                   f"quote {kc.cents(qbid)}/{kc.cents(qask)} | "
@@ -418,14 +425,14 @@ def run_session(client, agent, ticker, market):
                 oid = client.place_order(ticker, side, size, target,
                                          post_only=True)
                 resting[side] = (oid, target)
-            except requests.HTTPError as e:
+            except requests.RequestException as e:
                 resting[side] = (None, None)
                 event(f"{side} rejected @ {kc.cents(target)}: {str(e)[:70]}")
 
         if cycle % 20 == 0:
             try:
                 balance = client.get_balance_dollars()
-            except requests.HTTPError:
+            except requests.RequestException:
                 pass
 
     ok = kill_all()
@@ -453,14 +460,24 @@ if __name__ == "__main__":
     client = kc.KalshiClient(BASE_URL, KEY_ID, PRIVATE_KEY_PATH)
 
     if "--scan" in argv:
-        only = None
+        only = series = None
         if "--only" in argv:
             only = [c.strip() for c in argv[argv.index("--only") + 1].split(",")]
-        book_viewer.scan(client, include_sports="--sports" in argv, only=only)
+        if "--focus" in argv:
+            series = book_viewer.FOCUS_SERIES
+        if "--series" in argv:
+            series = [s.strip() for s in argv[argv.index("--series") + 1].split(",")]
+        book_viewer.scan(client, include_sports="--sports" in argv, only=only,
+                         series=series)
         sys.exit(0)
 
     positional = [a for a in argv if not a.startswith("--")]
-    ticker = positional[0] if positional else TICKER
+    if not positional:
+        print("Usage: python kalshi-market-making-demo.py TICKER [--dry-run]\n"
+              "       python kalshi-market-making-demo.py --scan [--focus]\n\n"
+              "No default ticker: any hard-coded market goes stale. Run --scan.")
+        sys.exit(1)
+    ticker = positional[0]
 
     market = client.get_market(ticker)
     print(f"Market: {market.get('title')}  [{ticker}]")
@@ -484,7 +501,7 @@ if __name__ == "__main__":
         if bal < 1.0:
             print("WARNING: under $1.00 — a two-sided one-lot quote ties up "
                   "about $1.00 of collateral. Quoting will likely be paused.")
-    except requests.HTTPError as e:
+    except requests.RequestException as e:
         print(f"Could not read balance: {e}")
 
     agent = Agent(state_size=6, epsilon=0.2)

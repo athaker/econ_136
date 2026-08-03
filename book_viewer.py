@@ -324,7 +324,7 @@ def scan(client, limit=25, include_sports=False, only=None, series=None):
                 ms = client._request("GET", "/markets",
                                      params={"series_ticker": s, "status": "open",
                                              "limit": 200}).get("markets", [])
-            except requests.HTTPError as e:
+            except requests.RequestException as e:
                 print(f"  {s}: {e}")
                 continue
             for m in ms:

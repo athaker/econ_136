@@ -226,7 +226,7 @@ class KalshiClient:
                 resp = self._request("GET", path,
                                      params={"ticker": ticker, "status": "resting"})
                 return resp.get("orders", [])
-            except requests.HTTPError:
+            except requests.RequestException:
                 continue
         return []
 
@@ -252,10 +252,10 @@ class KalshiClient:
             return
         try:
             self._request("DELETE", f"/portfolio/events/orders/{order_id}")
-        except requests.HTTPError:
+        except requests.RequestException:
             try:
                 self._request("DELETE", f"/portfolio/orders/{order_id}")
-            except requests.HTTPError:
+            except requests.RequestException:
                 pass                          # already filled or gone
 
     def cancel_all(self, ticker):
