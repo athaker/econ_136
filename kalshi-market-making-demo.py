@@ -1,79 +1,97 @@
 """
-Kalshi Market-Making Demo v2 — Agents for Finance (2026)
+Kalshi Market-Making Demo v3 — Agents for Finance (2026)
 Avi Thaker & Daniel Sonner
 
-A small Q-learning agent that MAKES markets on a Kalshi election contract.
-Quoting logic (v2):
+A small Q-learning agent that MAKES markets on a Kalshi contract, sized for a
+tiny account and rendered as a live depth ladder (see book_viewer.py).
+
+Quoting logic (v3):
   * Fair value = microprice (size-weighted mid of best bid/ask)
-  * Quotes are skewed by inventory (long -> shade down, short -> shade up)
-  * The agent chooses a "lean" (SYMMETRIC / LEAN_BUY / LEAN_SELL); the leaned
-    side joins the touch so the demo actually trades on thick books
-  * Optional starter cross at launch guarantees a visible fill on stage
-  * ALL positions are killed (force-flattened) at the end, with escalation
+  * Fair is skewed by inventory (long -> shade down, short -> shade up)
+  * Quotes are ALWAYS two-sided, and the width is floored at the level where a
+    round trip still pays after the taker fee to flatten (MIN_EDGE_C)
+  * The agent picks a lean (SYMMETRIC / LEAN_BUY / LEAN_SELL); the leaned side
+    steps toward the touch to actually get filled, and the other side is pushed
+    out to preserve the required width
+  * All orders are post_only -> we are always the MAKER, so entry fees are zero
+  * ALL positions are force-flattened at the end, with escalation
+
+v3 targets the post-March-2026 API (dollar strings, fixed-point counts,
+tapered deci-cent ticks, /portfolio/events/orders). See kalshi_client.py.
 
 DEMO ONLY. NOT FINANCIAL ADVICE. Please don't try this at home.
 
 Setup:
   export KALSHI_ACCESS_KEY="your-key-id"
-  export KALSHI_PRIVATE_KEY_PATH="/path/to/kalshi_private_key.pem"
+  export KALSHI_PRIVATE_KEY_PATH="./key.txt"
   pip install requests cryptography torch
 
 Usage:
-  python kalshi-market-making-demo.py                # run the demo
-  python kalshi-market-making-demo.py --scan senate  # rank live markets by
-                                                     # spread x volume first
-
-Prices are in CENTS (1-99). Contracts settle at 100c (YES) or 0c (NO).
+  python kalshi-market-making-demo.py --scan            # find a live market
+  python kalshi-market-making-demo.py TICKER            # quote it
+  python kalshi-market-making-demo.py TICKER --dry-run  # print, don't send
 """
 
 import atexit
-import base64
-import math
 import os
 import random
 import sys
 import time
-import uuid
 
 import requests
 import torch
 import torch.nn as nn
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding
+
+import book_viewer
+import kalshi_client as kc
 
 # --- Configuration -----------------------------------------------------------
-
-# Default: 2026 House control (Democratic side) — the most liquid election
-# market, per the fallback plan: liquidity first, then lean one side to trade.
-# Morning-of, run `--scan senate` and consider switching to a competitive
-# individual race (e.g. the ~50/50 Ohio Senate market) for wider spreads and
-# livelier passive fills.
-TICKER = "CONTROLH-2026-D"
 
 BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
 # Rehearsal without real money: https://demo-api.kalshi.co/trade-api/v2
 
-RUN_MINUTES = 15            # 20-min slot INCLUDES Q&A and a hard stop:
-                            # leave time for the kill sequence + wrap-up
-REPORT_EVERY_S = 60         # cycle summary cadence
-ORDER_SIZE = 10             # contracts per quote
-STARTER_SIZE = 5            # size of the guaranteed opening fill
-STARTER_CROSS = True        # cross the spread once at launch (guaranteed fill)
-MAX_INVENTORY = 30          # absolute net YES cap
+TICKER = "KXZEC15M-26AUG022030-30"   # override on the command line
 
-HALF_SPREAD = 1.0           # cents each side of fair value (when book allows)
-SKEW_PER_CONTRACT = 0.05    # cents of fair-value shift per contract held
-LEAN_EXTRA = 0.75           # cents of extra shade toward the leaned side
+RUN_MINUTES = 15
+ORDER_SIZE = 1              # contracts per quote — $2.50 buys about two
+MAX_INVENTORY = 1           # absolute net YES cap
+MIN_EDGE_C = 0.5            # cents of profit required per side, after fees
+SKEW_PER_CONTRACT_C = 0.5   # cents of fair-value shift per contract held
 
-DRY_RUN = False             # True = print orders instead of sending
-SHOW_BALANCE = False        # sessions are recorded & posted - keep the
+# Safety rails. On a thin, lopsided book the microprice lurches toward whichever
+# side has less size, which on a wide market can imply a "fair" value 15c away
+# from the crowd's bid. Two guards:
+MAX_IMPROVE_C = 1.0         # we may improve on the touch by at most this much,
+                            # so we can never become the best bid by a mile
+FAIR_TRUST = 0.6            # shrink the microprice toward the plain mid; the
+                            # rest is book noise, not information
+
+BALANCE_RESERVE = 0.25      # dollars kept unencumbered as a buffer
+STARTER_CROSS = False       # v2 crossed the spread for a guaranteed opening
+                            # fill; on a $2.50 account that is a real loss, so
+                            # we rely on the lean to earn a fill instead
+
+DRY_RUN = False
+SHOW_BALANCE = False        # sessions get recorded and posted — keep the
                             # account balance off the projector
+SHOW_LADDER = True
+LADDER_DEPTH = 6
+EVENT_LINES = 6
 
-KEY_ID = os.environ.get("KALSHI_ACCESS_KEY", "")
-PRIVATE_KEY_PATH = os.environ.get("KALSHI_PRIVATE_KEY_PATH", "kalshi_private_key.pem")
+KEY_ID = kc.load_key_id()             # $KALSHI_ACCESS_KEY, else key_id.txt
+PRIVATE_KEY_PATH = kc.load_key_path()
+
+EVENTS = []
 
 
-# --- 1. Q-Learning Agent (same brain, new action space) ----------------------
+def event(msg):
+    EVENTS.append(f"{time.strftime('%H:%M:%S')}  {msg}")
+    del EVENTS[:-EVENT_LINES]
+    if not SHOW_LADDER:
+        print(msg)
+
+
+# --- 1. Q-Learning Agent (same brain as v2) ----------------------------------
 
 class QNetwork(nn.Module):
     def __init__(self, state_size, action_size):
@@ -90,14 +108,17 @@ class QNetwork(nn.Module):
 
 
 class Agent:
-    """Epsilon-greedy agent choosing a quoting POSTURE, not a trade."""
+    """Epsilon-greedy agent choosing a quoting POSTURE, not a trade.
+
+    NOTE: this network is randomly initialized and never trained. It is a
+    teaching prop for the state -> action -> reward structure, not a strategy.
+    """
 
     def __init__(self, state_size, epsilon=0.2):
         self.q_network = QNetwork(state_size, 3)
         self.actions_map = {0: "SYMMETRIC", 1: "LEAN_BUY", 2: "LEAN_SELL"}
         self.epsilon = epsilon
-        print(f"Agent initialized with epsilon = {epsilon}. "
-              f"It will explore {epsilon * 100:.0f}% of the time.")
+        self.last_reason = ""
 
     def choose_action(self, state, inventory):
         valid = ["SYMMETRIC"]
@@ -108,369 +129,373 @@ class Agent:
 
         if random.random() < self.epsilon:
             action = random.choice(valid)
-            print(f"🎲 Exploring: posture {action}")
+            self.last_reason = f"explore -> {action}"
             return action
         with torch.no_grad():
             q = self.q_network(torch.FloatTensor(state).unsqueeze(0)).squeeze(0)
             action = self.actions_map[torch.argmax(q).item()]
             if action not in valid:
                 action = "SYMMETRIC"
-            print(f"🧠 Exploiting: posture {action}")
+            self.last_reason = f"exploit -> {action}"
             return action
 
 
-# --- 2. Minimal Kalshi REST client (RSA-PSS signed) --------------------------
+# --- 2. Quoting --------------------------------------------------------------
 
-class KalshiClient:
-    def __init__(self, base_url, key_id, private_key_path):
-        self.base_url = base_url
-        self.key_id = key_id
-        with open(private_key_path, "rb") as f:
-            self.private_key = serialization.load_pem_private_key(f.read(), password=None)
-        self.session = requests.Session()
+def required_half_width(fair_mils):
+    """Half-width (mils) that keeps a round trip profitable.
 
-    def _headers(self, method, path):
-        ts = str(int(time.time() * 1000))
-        msg = f"{ts}{method}{path}".encode()
-        sig = self.private_key.sign(
-            msg,
-            padding.PSS(mgf=padding.MGF1(hashes.SHA256()),
-                        salt_length=padding.PSS.DIGEST_LENGTH),
-            hashes.SHA256(),
-        )
-        return {
-            "KALSHI-ACCESS-KEY": self.key_id,
-            "KALSHI-ACCESS-TIMESTAMP": ts,
-            "KALSHI-ACCESS-SIGNATURE": base64.b64encode(sig).decode(),
-            "Content-Type": "application/json",
-        }
-
-    def _request(self, method, path, params=None, json=None):
-        api_path = "/trade-api/v2" + path
-        r = self.session.request(method, self.base_url + path, params=params,
-                                 json=json, headers=self._headers(method, api_path),
-                                 timeout=10)
-        r.raise_for_status()
-        return r.json() if r.text else {}
-
-    # market data
-    def get_market(self, ticker):
-        return self._request("GET", f"/markets/{ticker}")["market"]
-
-    def get_orderbook(self, ticker, depth=5):
-        return self._request("GET", f"/markets/{ticker}/orderbook",
-                             params={"depth": depth})["orderbook"]
-
-    def list_open_markets(self, query, max_pages=10):
-        out, cursor = [], None
-        for _ in range(max_pages):
-            params = {"status": "open", "limit": 200}
-            if cursor:
-                params["cursor"] = cursor
-            resp = self._request("GET", "/markets", params=params)
-            for m in resp.get("markets", []):
-                text = (m.get("title", "") + " " + m["ticker"]).lower()
-                if query.lower() in text:
-                    out.append(m)
-            cursor = resp.get("cursor")
-            if not cursor:
-                break
-        return sorted(out, key=lambda m: -(m.get("volume") or 0))
-
-    # trading
-    def place_limit(self, ticker, action, count, yes_price):
-        if DRY_RUN:
-            print(f"[DRY RUN] {action} {count} YES @ {yes_price}c")
-            return None
-        order = self._request("POST", "/portfolio/orders", json={
-            "client_order_id": str(uuid.uuid4()),
-            "ticker": ticker,
-            "action": action,          # "buy" or "sell"
-            "side": "yes",
-            "type": "limit",
-            "count": count,
-            "yes_price": int(yes_price),
-        })
-        return order["order"]["order_id"]
-
-    def cancel(self, order_id):
-        if order_id is None:
-            return
-        try:
-            self._request("DELETE", f"/portfolio/orders/{order_id}")
-        except requests.HTTPError:
-            pass  # already filled/canceled
-
-    def cancel_all_resting(self, ticker):
-        try:
-            resp = self._request("GET", "/portfolio/orders",
-                                 params={"ticker": ticker, "status": "resting"})
-            for o in resp.get("orders", []):
-                self.cancel(o["order_id"])
-        except requests.HTTPError as e:
-            print(f"warn: cancel_all failed ({e})")
-
-    def get_fills(self, ticker, min_ts):
-        resp = self._request("GET", "/portfolio/fills",
-                             params={"ticker": ticker, "min_ts": min_ts, "limit": 200})
-        return resp.get("fills", [])
-
-    def get_position(self, ticker):
-        resp = self._request("GET", "/portfolio/positions", params={"ticker": ticker})
-        for p in resp.get("market_positions", []):
-            if p["ticker"] == ticker:
-                return p.get("position", 0)
-        return 0
-
-    def get_balance(self):
-        return self._request("GET", "/portfolio/balance")["balance"]
+    We are always post_only, so ENTRY costs no fee. The cost we must cover is
+    the taker fee to flatten whatever we end up holding, plus the edge we
+    actually want to earn.
+    """
+    exit_fee_mils = kc.taker_fee_dollars(1, fair_mils) * 1000
+    return exit_fee_mils / 2.0 + MIN_EDGE_C * 10
 
 
-# --- 3. Book math ------------------------------------------------------------
+def make_quotes(market, bid, ask, inventory, posture, fair):
+    """Two-sided quotes around an inventory-skewed fair value, in mils.
 
-def best_prices(book):
-    """(best_yes_bid, best_yes_ask, bid_size, ask_size) in cents.
-    Kalshi books list resting YES bids and resting NO bids; a NO bid at q
-    is a YES ask at 100 - q."""
-    yes = book.get("yes") or []
-    no = book.get("no") or []
-    best_bid, bid_sz = (yes[-1][0], yes[-1][1]) if yes else (1, 0)
-    best_ask, ask_sz = (100 - no[-1][0], no[-1][1]) if no else (99, 0)
-    return best_bid, best_ask, bid_sz, ask_sz
+    The TOTAL width is pinned at 2 * required_half_width, so every round trip
+    clears fees no matter the posture. A lean does not tighten the quote — it
+    SLIDES it, so the side we want filled sits closer to fair (and therefore
+    closer to the crowd) while the other side is pushed out by the same amount.
 
+    Leaning toward the touch would be wrong on a wide book: there the best bid
+    can sit far below fair, so "joining the bid" is the least fillable price
+    available. Sliding toward fair is what actually earns a fill.
+    """
+    tick = kc.tick_mils(market, int(fair))
+    half = max(required_half_width(fair), tick / 2.0)
+    edge = MIN_EDGE_C * 10                      # minimum edge we always keep
+    slide = max(0.0, half - edge)               # how far a lean may shift us
 
-def microprice(bid, ask, bid_sz, ask_sz):
-    """Size-weighted mid: leans toward the heavier side's implied pressure."""
-    if bid_sz + ask_sz == 0:
-        return (bid + ask) / 2
-    return (bid * ask_sz + ask * bid_sz) / (bid_sz + ask_sz)
-
-
-def taker_fee_cents(count, price_cents):
-    """General schedule: ceil(0.07 * C * P * (1-P)). Maker fee is 0 on most
-    series (0.0175 formula on flagged ones) — verify your ticker's flag."""
-    p = price_cents / 100.0
-    return math.ceil(0.07 * count * p * (1 - p) * 100)
-
-
-def make_quotes(bid, ask, bid_sz, ask_sz, inventory, posture):
-    """Two-sided quotes around a skewed microprice. The leaned side joins the
-    touch (so it can trade on a 1c-wide book); quotes never cross the spread."""
-    fair = microprice(bid, ask, bid_sz, ask_sz)
-    fair -= SKEW_PER_CONTRACT * inventory
+    center = fair - SKEW_PER_CONTRACT_C * 10 * inventory
     if posture == "LEAN_BUY":
-        fair += LEAN_EXTRA
+        center += slide                          # raises the bid toward fair
     elif posture == "LEAN_SELL":
-        fair -= LEAN_EXTRA
+        center -= slide                          # lowers the ask toward fair
 
-    qbid = int(math.floor(fair - HALF_SPREAD))
-    qask = int(math.ceil(fair + HALF_SPREAD))
+    qbid = kc.round_to_tick(market, int(round(center - half)), -1)
+    qask = kc.round_to_tick(market, int(round(center + half)), +1)
 
-    # leaned side steps up to the touch
-    if posture == "LEAN_BUY":
-        qbid = max(qbid, bid)
-    if posture == "LEAN_SELL":
-        qask = min(qask, ask)
+    # Aggression cap: never jump the queue by more than MAX_IMPROVE_C. Without
+    # this, a lurching microprice on a wide book will happily post a bid far
+    # above the crowd's best bid and get adversely selected instantly.
+    qbid = min(qbid, kc.round_to_tick(market, bid + int(MAX_IMPROVE_C * 10), -1))
+    qask = max(qask, kc.round_to_tick(market, ask - int(MAX_IMPROVE_C * 10), +1))
 
-    # never cross; keep inside [1, 99]; keep a valid two-sided quote
-    qbid = max(1, min(qbid, ask - 1))
-    qask = min(99, max(qask, bid + 1))
-    if qbid >= qask:
-        qbid = qask - 1
-    return qbid, qask
+    # stay passive: never cross the book (post_only would reject us anyway)
+    qbid = min(qbid, kc.round_to_tick(market, ask - tick, -1))
+    qask = max(qask, kc.round_to_tick(market, bid + tick, +1))
+
+    qbid = max(tick, qbid)
+    qask = min(1000 - tick, qask)
+    if qask - qbid < tick:
+        qask = qbid + tick
+    return int(qbid), int(qask)
 
 
-# --- 4. Session --------------------------------------------------------------
+def liquidation_value(inventory, bid, ask):
+    """Dollars we'd actually net by closing RIGHT NOW, crossing the spread.
 
-def run_session(client, agent):
-    inventory = client.get_position(TICKER)
-    if inventory != 0:
-        print(f"Note: starting with existing inventory of {inventory}.")
-    cash_cents = 0.0
-    fees_cents = 0.0
-    seen_fills = set()
+    Marking inventory to the mid flatters the P&L: it assumes you can exit at a
+    price nobody is offering. The gap between the mark and this number is the
+    inventory risk a market maker's spread is compensation for — which is the
+    whole point of the talk, so put it on the screen.
+    """
+    if abs(inventory) < 0.005:
+        return 0.0
+    if inventory > 0:                       # sell into the bid
+        return inventory * bid / 1000.0 - kc.taker_fee_dollars(inventory, bid)
+    return inventory * ask / 1000.0 - kc.taker_fee_dollars(-inventory, ask)
+
+
+def affordable_size(qbid, qask, balance):
+    """How many contracts we can post two-sided given the cash on hand.
+
+    A resting bid for 1 YES at P locks P dollars. A resting ask for 1 YES is
+    economically a NO bid at (1 - P), locking (1 - P). So a one-lot two-sided
+    quote ties up roughly $1.00 regardless of price.
+    """
+    per_lot = qbid / 1000.0 + (1000 - qask) / 1000.0
+    usable = max(0.0, balance - BALANCE_RESERVE)
+    return int(usable // per_lot) if per_lot > 0 else 0
+
+
+# --- 3. Session --------------------------------------------------------------
+
+def run_session(client, agent, ticker, market):
+    title = market.get("title", "")
+    inventory = client.get_position(ticker)
+    if inventory:
+        event(f"starting with existing inventory of {inventory:+g}")
+
+    try:
+        balance = client.get_balance_dollars()
+    except requests.HTTPError as e:
+        event(f"could not read balance ({e}); assuming $0")
+        balance = 0.0
+
+    cash = 0.0                 # realized cash flow, dollars
+    fees = 0.0                 # actual fees from fills, dollars
+    seen = set()
     since_ts = int(time.time())
-    resting = {"buy": (None, None), "sell": (None, None)}  # side -> (id, px)
+    resting = {"bid": (None, None), "ask": (None, None)}   # side -> (id, price)
     n_fills = 0
 
-    def process_new_fills():
-        nonlocal inventory, cash_cents, n_fills
+    def process_fills():
+        nonlocal cash, fees, n_fills
         try:
-            fills = client.get_fills(TICKER, since_ts)
+            fills = client.get_fills(ticker, since_ts)
         except requests.HTTPError:
             return
         for f in fills:
-            fid = f.get("trade_id") or f.get("fill_id") or \
-                  f.get("order_id", "") + str(f.get("created_time"))
-            if fid in seen_fills:
+            fid = f.get("fill_id") or f.get("trade_id")
+            if not fid or fid in seen:
                 continue
-            seen_fills.add(fid)
-            qty, px = f["count"], f["yes_price"]
+            seen.add(fid)
+            qty = float(f.get("count_fp", 0))
+            px = kc.mils(f.get("yes_price_dollars", "0"))
+            fees += float(f.get("fee_cost", 0) or 0)
             n_fills += 1
-            if f["action"] == "buy":
-                inventory += qty
-                cash_cents -= qty * px
-                print(f"✅ FILL: bought {qty} YES @ {px}c")
+            # book_side tells us which side of the book WE were on
+            side = (f.get("book_side") or f.get("action") or "").lower()
+            bought = side in ("bid", "buy")
+            if bought:
+                cash -= qty * px / 1000.0
+                event(f"\033[92mFILL  bought {qty:g} YES @ {kc.cents(px)}\033[0m")
             else:
-                inventory -= qty
-                cash_cents += qty * px
-                print(f"✅ FILL: sold {qty} YES @ {px}c")
+                cash += qty * px / 1000.0
+                event(f"\033[91mFILL  sold   {qty:g} YES @ {kc.cents(px)}\033[0m")
 
-    def kill_all_positions(tag="SESSION END"):
-        """Cancel everything, then flatten with escalating aggression until
-        verifiably flat. This is the 'nothing survives the demo' switch."""
-        nonlocal cash_cents, fees_cents, inventory
-        print(f"\n🛑 {tag}: canceling quotes and killing all positions...")
-        client.cancel_all_resting(TICKER)
+    def kill_all(tag="SESSION END"):
+        """Cancel everything, then flatten with escalating aggression."""
+        nonlocal inventory
+        print(f"\n{tag}: canceling quotes and flattening...")
+        try:
+            client.cancel_all(ticker)
+        except Exception as e:
+            print(f"  warn: cancel_all failed ({e})")
         if DRY_RUN:
             return True
-        for attempt in range(12):
-            process_new_fills()
-            inventory = client.get_position(TICKER)
-            if inventory == 0:
-                print("✅ POSITION VERIFIED FLAT.")
+        for attempt in range(10):
+            process_fills()
+            try:
+                inventory = client.get_position(ticker)
+            except requests.HTTPError:
+                time.sleep(1)
+                continue
+            if abs(inventory) < 0.005:
+                print("POSITION VERIFIED FLAT.")
                 return True
-            book = client.get_orderbook(TICKER)
-            bid, ask, *_ = best_prices(book)
-            qty = min(abs(inventory), 100)
-            if inventory > 0:
-                px = max(1, bid - attempt)          # walk down through the book
-                client.place_limit(TICKER, "sell", qty, px)
-            else:
-                px = min(99, ask + attempt)         # walk up through the book
-                client.place_limit(TICKER, "buy", qty, px)
-            fees_cents += taker_fee_cents(qty, px)
+            try:
+                b, a, _, _ = kc.touch(*kc.normalize(client.get_orderbook(ticker)))
+                tick = kc.tick_mils(market, b)
+                if inventory > 0:            # long -> hit the bid, walking down
+                    px = kc.round_to_tick(market, b - attempt * tick, -1)
+                    client.place_order(ticker, "ask", abs(inventory), px,
+                                       post_only=False)
+                else:                        # short -> lift the ask, walking up
+                    px = kc.round_to_tick(market, a + attempt * tick, +1)
+                    client.place_order(ticker, "bid", abs(inventory), px,
+                                       post_only=False)
+                print(f"  flatten attempt {attempt + 1}: {abs(inventory):g} @ "
+                      f"{kc.cents(px)}")
+            except requests.HTTPError as e:
+                print(f"  flatten attempt {attempt + 1} rejected: {e}")
             time.sleep(1.5)
-            client.cancel_all_resting(TICKER)       # clear any unfilled remainder
-        process_new_fills()
-        inventory = client.get_position(TICKER)
-        if inventory != 0:
-            print(f"🚨 CRITICAL: still holding {inventory} after escalation. "
-                  f"Close manually in the UI NOW.")
+            try:
+                client.cancel_all(ticker)
+            except Exception:
+                pass
+        process_fills()
+        try:
+            inventory = client.get_position(ticker)
+        except requests.HTTPError:
+            inventory = None
+        if inventory:
+            print(f"CRITICAL: still holding {inventory:+g}. Close it manually "
+                  f"in the Kalshi UI NOW.")
             return False
-        print("✅ POSITION VERIFIED FLAT.")
+        print("POSITION VERIFIED FLAT.")
         return True
 
-    # make sure the kill switch runs even on Ctrl-C or a crash
-    atexit.register(lambda: kill_all_positions("EXIT SAFETY"))
-
-    # --- optional guaranteed opening fill (crosses the spread once) ---
-    if STARTER_CROSS and not DRY_RUN:
-        book = client.get_orderbook(TICKER)
-        bid, ask, bid_sz, ask_sz = best_prices(book)
-        fair = microprice(bid, ask, bid_sz, ask_sz)
-        # open on the cheaper-looking side per microprice
-        if fair >= (bid + ask) / 2:
-            print(f"🎬 Starter: buying {STARTER_SIZE} YES at the ask ({ask}c)")
-            client.place_limit(TICKER, "buy", STARTER_SIZE, ask)
-            fees_cents += taker_fee_cents(STARTER_SIZE, ask)
-        else:
-            print(f"🎬 Starter: selling {STARTER_SIZE} YES at the bid ({bid}c)")
-            client.place_limit(TICKER, "sell", STARTER_SIZE, bid)
-            fees_cents += taker_fee_cents(STARTER_SIZE, bid)
-        time.sleep(2)
-        process_new_fills()
+    atexit.register(lambda: kill_all("EXIT SAFETY"))
 
     deadline = time.time() + RUN_MINUTES * 60
-    next_report = time.time() + REPORT_EVERY_S
-    cycle = 1
-    print(f"\nQuoting {TICKER} for {RUN_MINUTES} minutes...")
+    cycle = 0
+    size = ORDER_SIZE
+    print(f"\nQuoting {ticker} for {RUN_MINUTES} minutes...")
 
     while time.time() < deadline:
         time.sleep(1)
+        cycle += 1
         try:
-            book = client.get_orderbook(TICKER)
+            book = client.get_orderbook(ticker, depth=LADDER_DEPTH + 6)
         except requests.HTTPError as e:
-            print(f"Waiting for market data... ({e})")
+            event(f"waiting for market data ({e})")
             continue
-        bid, ask, bid_sz, ask_sz = best_prices(book)
 
-        process_new_fills()
+        bids, asks = kc.normalize(book)
+        bid, ask, bid_sz, ask_sz = kc.touch(bids, asks)
 
-        fair = microprice(bid, ask, bid_sz, ask_sz)
-        state = [bid / 100, ask / 100, bid_sz / 10000, ask_sz / 10000,
-                 fair / 100, inventory / MAX_INVENTORY]
-        posture = agent.choose_action(state, inventory)
-        qbid, qask = make_quotes(bid, ask, bid_sz, ask_sz, inventory, posture)
-
-        mark = cash_cents + inventory * fair - fees_cents
-        color = "\033[92m" if mark >= 0 else "\033[91m"
-        print(f"| {bid}c x {ask}c (micro {fair:5.2f}) | Inv {inventory:4d} | "
-              f"Quote {qbid}/{qask} | PNL {color}${mark / 100:7.2f}\033[0m | {posture}")
-
-        # refresh quotes only when the target moved (less churn, fewer requests)
-        if inventory < MAX_INVENTORY:
-            if resting["buy"][1] != qbid:
-                client.cancel(resting["buy"][0])
-                oid = client.place_limit(TICKER, "buy", ORDER_SIZE, qbid)
-                resting["buy"] = (oid, qbid)
-        else:
-            client.cancel(resting["buy"][0]); resting["buy"] = (None, None)
-        if inventory > -MAX_INVENTORY:
-            if resting["sell"][1] != qask:
-                client.cancel(resting["sell"][0])
-                oid = client.place_limit(TICKER, "sell", ORDER_SIZE, qask)
-                resting["sell"] = (oid, qask)
-        else:
-            client.cancel(resting["sell"][0]); resting["sell"] = (None, None)
-
-        if time.time() >= next_report:
-            print(f"\n---> Cycle {cycle} | fills so far: {n_fills} | "
-                  f"est. fees: ${fees_cents / 100:.2f} | "
-                  f"PNL (marked to micro): ${mark / 100:.2f}\n")
-            cycle += 1
-            next_report += REPORT_EVERY_S
-
-    # --- end of session: kill everything, then report realized numbers ---
-    ok = kill_all_positions()
-    process_new_fills()
-    realized = cash_cents - fees_cents   # flat => cash IS the realized pnl
-    print("\n" + "-" * 70)
-    print(f"Demo finished. Fills: {n_fills} | Est. fees: ${fees_cents / 100:.2f}")
-    print(f"\033[1mFinal realized PNL: ${realized / 100:.2f}\033[0m"
-          + ("" if ok else "  (WARNING: position not flat!)"))
-
-
-# --- 5. Market scanner -------------------------------------------------------
-
-def scan(client, query):
-    """Rank live markets matching `query` by fillability: volume and spread.
-    Run this the morning of the talk and pick the liveliest book."""
-    print(f"Scanning open markets matching {query!r}...")
-    markets = client.list_open_markets(query)[:15]
-    print(f"{'TICKER':<28}{'VOL':>12}{'BOOK':>12}{'SPRD':>6}  TITLE")
-    for m in markets:
+        process_fills()
         try:
-            book = client.get_orderbook(m["ticker"])
-            bid, ask, bid_sz, ask_sz = best_prices(book)
-            spread = ask - bid
+            inventory = client.get_position(ticker)
         except requests.HTTPError:
-            bid = ask = spread = 0
-        print(f"{m['ticker']:<28}{(m.get('volume') or 0):>12,}"
-              f"{f'{bid}x{ask}':>12}{spread:>5}c  {m.get('title','')[:48]}")
-        time.sleep(0.2)
-    print("\nPick: enough volume to print in 20 minutes, widest spread you can "
-          "get. 2c+ on an unflagged (no-maker-fee) series is the sweet spot.")
+            pass
+
+        micro = kc.microprice(bid, ask, bid_sz, ask_sz)
+        fair = (bid + ask) / 2 + FAIR_TRUST * (micro - (bid + ask) / 2)
+
+        # Reasons we may be alive but not quoting. The ladder is drawn either
+        # way — a frozen screen with no explanation is the worst outcome.
+        banner = None
+        if not bids or not asks:
+            banner = "NOT QUOTING — book is empty"
+            if cycle % 15 == 1:                # re-check whether it even trades
+                try:
+                    st = client.get_market(ticker).get("status")
+                    if st != "active":
+                        banner = f"MARKET IS {str(st).upper()} — nothing to quote"
+                        event(f"market status is {st}; stopping")
+                        break
+                except requests.HTTPError:
+                    pass
+        state = [bid / 1000, ask / 1000, min(bid_sz, 1e4) / 1e4,
+                 min(ask_sz, 1e4) / 1e4, fair / 1000,
+                 inventory / max(1, MAX_INVENTORY)]
+        posture = agent.choose_action(state, inventory)
+        qbid, qask = make_quotes(market, bid, ask, inventory, posture, fair)
+
+        # size to the cash actually available
+        can = affordable_size(qbid, qask, balance)
+        size = max(0, min(ORDER_SIZE, can))
+        note_extra = ""
+        if size == 0 and not banner:
+            banner = (f"NOT QUOTING — balance ${balance:.2f} cannot collateralize "
+                      f"a two-sided lot (needs about $1.00)")
+
+        mark = cash + inventory * fair / 1000.0 - fees
+        liq = cash + liquidation_value(inventory, bid, ask) - fees
+
+        if SHOW_LADDER:
+            book_viewer.draw(
+                book, ticker=ticker, title=title, depth=LADDER_DEPTH,
+                fair=fair, step=kc.tick_mils(market, int(fair)),
+                my_bid=resting["bid"][1], my_ask=resting["ask"][1],
+                my_bid_size=size, my_ask_size=size,
+                inventory=inventory, pnl=mark, pnl_liq=liq, posture=posture,
+                balance=balance if SHOW_BALANCE else None,
+                events=EVENTS, banner=banner,
+                note=f"cycle {cycle} · fills {n_fills} · fees ${fees:.2f} · "
+                     f"{agent.last_reason} · {int(deadline - time.time())}s left"
+                     f" · Ctrl-C = flatten{note_extra}")
+        else:
+            print(f"| {kc.cents(bid)} x {kc.cents(ask)} | inv {inventory:+g} | "
+                  f"quote {kc.cents(qbid)}/{kc.cents(qask)} | "
+                  f"pnl ${mark:+.2f} | {posture}"
+                  + (f" | {banner}" if banner else ""))
+
+        if DRY_RUN or size == 0 or banner:
+            continue
+
+        # refresh a side only when its target price moved
+        for side, target, cap_ok in (
+                ("bid", qbid, inventory < MAX_INVENTORY),
+                ("ask", qask, inventory > -MAX_INVENTORY)):
+            if not cap_ok:
+                if resting[side][0]:
+                    client.cancel(resting[side][0])
+                    resting[side] = (None, None)
+                continue
+            if resting[side][1] == target:
+                continue
+            if resting[side][0]:
+                client.cancel(resting[side][0])
+            try:
+                oid = client.place_order(ticker, side, size, target,
+                                         post_only=True)
+                resting[side] = (oid, target)
+            except requests.HTTPError as e:
+                resting[side] = (None, None)
+                event(f"{side} rejected @ {kc.cents(target)}: {str(e)[:70]}")
+
+        if cycle % 20 == 0:
+            try:
+                balance = client.get_balance_dollars()
+            except requests.HTTPError:
+                pass
+
+    ok = kill_all()
+    process_fills()
+    realized = cash - fees
+    print("\n" + "-" * 70)
+    print(f"Demo finished. Fills: {n_fills} | Fees paid: ${fees:.2f}")
+    print(f"Final realized P&L: ${realized:+.2f}"
+          + ("" if ok else "   (WARNING: position not flat!)"))
 
 
 # --- Main --------------------------------------------------------------------
 
 if __name__ == "__main__":
+    argv = sys.argv[1:]
+    if "--dry-run" in argv:
+        DRY_RUN = True
+        argv.remove("--dry-run")
+
     if not KEY_ID:
-        print("Set KALSHI_ACCESS_KEY and KALSHI_PRIVATE_KEY_PATH first.")
+        print("Set KALSHI_ACCESS_KEY (your key ID from Kalshi Settings -> API) "
+              "and KALSHI_PRIVATE_KEY_PATH.")
         sys.exit(1)
 
-    client = KalshiClient(BASE_URL, KEY_ID, PRIVATE_KEY_PATH)
+    client = kc.KalshiClient(BASE_URL, KEY_ID, PRIVATE_KEY_PATH)
 
-    if len(sys.argv) > 2 and sys.argv[1] == "--scan":
-        scan(client, sys.argv[2])
+    if "--scan" in argv:
+        only = None
+        if "--only" in argv:
+            only = [c.strip() for c in argv[argv.index("--only") + 1].split(",")]
+        book_viewer.scan(client, include_sports="--sports" in argv, only=only)
         sys.exit(0)
 
-    m = client.get_market(TICKER)
-    print(f"Market: {m['title']}  [{TICKER}]")
-    print(f"Last: {m.get('last_price')}c | Volume: {m.get('volume'):,} contracts")
-    if SHOW_BALANCE:
-        print(f"Balance: ${client.get_balance() / 100:,.2f}")
+    positional = [a for a in argv if not a.startswith("--")]
+    ticker = positional[0] if positional else TICKER
+
+    market = client.get_market(ticker)
+    print(f"Market: {market.get('title')}  [{ticker}]")
+    print(f"Last: {market.get('last_price_dollars')} | "
+          f"24h volume: {float(market.get('volume_24h_fp') or 0):,.0f} contracts")
+
+    status = market.get("status")
+    if status != "active":
+        print(f"\nThis market is {str(status).upper()}, not active — it has "
+              f"stopped trading and its book is gone.\nNothing can be quoted "
+              f"here. Run --scan and pick a live ticker.")
+        sys.exit(1)
+    if not any(client.get_orderbook(ticker, depth=1).get(k)
+               for k in ("yes_dollars", "no_dollars")):
+        print(f"\nThis market is active but its book is completely empty.\n"
+              f"Run --scan and pick one with real size on both sides.")
+        sys.exit(1)
+    try:
+        bal = client.get_balance_dollars()
+        print(f"Balance: ${bal:,.2f}")
+        if bal < 1.0:
+            print("WARNING: under $1.00 — a two-sided one-lot quote ties up "
+                  "about $1.00 of collateral. Quoting will likely be paused.")
+    except requests.HTTPError as e:
+        print(f"Could not read balance: {e}")
 
     agent = Agent(state_size=6, epsilon=0.2)
-    run_session(client, agent)
+    print(f"Agent initialized with epsilon = {agent.epsilon} "
+          f"(explores {agent.epsilon * 100:.0f}% of the time; network is "
+          f"UNTRAINED).")
+
+    if SHOW_LADDER:
+        print("\033[?25l", end="", flush=True)
+    try:
+        run_session(client, agent, ticker, market)
+    finally:
+        if SHOW_LADDER:
+            print("\033[?25h", end="", flush=True)

@@ -66,3 +66,15 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+# Secrets — never commit
+key.txt
+*.pem
+*_key*.txt
+.env
+
+# Python
+__pycache__/
+*.pyc
+key_id.txt
+.category_cache.json
+*.pptx.bak
