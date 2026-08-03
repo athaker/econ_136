@@ -78,3 +78,6 @@ __pycache__/
 key_id.txt
 .category_cache.json
 *.pptx.bak
+
+# IDE
+.idea/
