@@ -25,6 +25,8 @@ import shutil
 import sys
 import time
 
+import requests
+
 import kalshi_client as kc
 
 # --- ANSI ---------------------------------------------------------------------
@@ -50,6 +52,8 @@ BLOCKED_CATEGORIES = ["Sports", "Crypto"]   # --sports re-includes both
 CATEGORY_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               ".category_cache.json")
 CACHE_MAX_AGE_S = 24 * 3600
+
+SESSION_MINUTES = 15.0   # must match RUN_MINUTES in the demo, for FILL/S
 
 
 def _plain_len(s):
@@ -293,7 +297,8 @@ FOCUS_SERIES = ["KXTRUMPMENTION", "KXTRUMPSAY", "KXMAMDANIMENTION",
                 "KXFOXNEWSMENTION"]
 
 
-def scan(client, limit=25, include_sports=False, only=None, series=None):
+def scan(client, limit=25, include_sports=False, only=None, series=None,
+         min_vol=0):
     """Rank markets that are ACTUALLY trading by maker edge net of exit fees.
 
     Uses the public recent-trades feed: `/markets?status=open` is dominated by
@@ -363,14 +368,38 @@ def scan(client, limit=25, include_sports=False, only=None, series=None):
         except Exception:
             return None
 
+    def market_meta(tickers):
+        """24h volume + open interest, batched via /markets?tickers=.
+
+        The exchange-wide trade feed only spans ~40 SECONDS, so counting trades
+        in it tells you nothing about a market that prints 30x/day — which is
+        exactly the kind worth quoting. 24h volume is the honest signal.
+        """
+        meta = {}
+        for i in range(0, len(tickers), 50):
+            chunk = tickers[i:i + 50]
+            try:
+                resp = client._request("GET", "/markets",
+                                       params={"tickers": ",".join(chunk)})
+            except requests.RequestException:
+                continue
+            for m in resp.get("markets", []):
+                meta[m["ticker"]] = (float(m.get("volume_24h_fp") or 0),
+                                     float(m.get("open_interest_fp") or 0))
+        return meta
+
     # KXMVE* are auto-generated parlay markets — tens of thousands of them, with
     # no genuine two-sided book. They dominate any unfiltered ranking.
     cands = [t for t in top if keep(t)]
+    meta = market_meta(cands)
     with cf.ThreadPoolExecutor(10) as ex:
         books = [r for r in ex.map(stat, cands) if r]
 
     rows = []
     for t, b, a, bs, asz in books:
+        v24, oi = meta.get(t, (0.0, 0.0))
+        if v24 < min_vol:
+            continue
         spread = a - b
         mid = (a + b) / 2
         if spread <= 0 or not (50 <= mid <= 950):
@@ -379,40 +408,47 @@ def scan(client, limit=25, include_sports=False, only=None, series=None):
             continue                   # need a real crowd on BOTH sides
         half_c = spread / 2 / 10.0
         net = half_c - kc.taker_fee_dollars(1, mid) * 100
-        # Fillability. Three things have to be true at once to get filled on
-        # stage: there is edge to capture, the market actually prints, and the
-        # queue ahead of you is short enough to reach the front of. A 1c-wide
-        # market with 145k contracts resting scores ~0 no matter how liquid.
+        # Expected contracts we'd actually trade in one RUN_MINUTES session.
+        # Volume in the session is 24h volume scaled down; of that flow we only
+        # reach what gets past the queue resting ahead of us at the touch.
         queue = min(bs, asz)          # the thinner side fills first
-        activity = freq[t]
-        fill = max(0.0, net) * (activity ** 0.5) / (1.0 + queue / 10.0)
-        rows.append((net, t, b, a, bs, asz, activity, category(t), fill, queue))
+        vol_session = v24 * (SESSION_MINUTES / (24 * 60.0))
+        fill = vol_session / (1.0 + queue)
+        rows.append((net, t, b, a, bs, asz, v24, category(t), fill, queue, oi))
 
     # Rank by fillability first — a preferred category is a tiebreak, not a
     # reason to show an unfillable penny-wide market at the top of the list.
+    # Tradeable first: positive edge AND a realistic chance of filling. Category
+    # is a tiebreak — an unfillable penny-wide election market is still useless.
     def rank(r):
         c = r[7]
         pref = 0 if c in PREFERRED_CATEGORIES else 1 if c in ALLOWED_CATEGORIES else 2
-        return (-r[8], pref, -r[0])
+        return (0 if r[0] > 0 else 1, -r[8], pref, -r[0])
     rows.sort(key=rank)
 
-    print(f"{'TICKER':<40}{'CATEGORY':<15}{'BID':>7}{'ASK':>7}{'SPRD':>6}"
-          f"{'BIDSZ':>8}{'ASKSZ':>8}{'TRD':>5}{'NET/1':>8}{'FILL':>7}")
-    for net, t, b, a, bs, asz, n, c, fill, queue in rows[:limit]:
+    print(f"{'TICKER':<38}{'CATEGORY':<14}{'BID':>7}{'ASK':>7}{'SPRD':>6}"
+          f"{'BIDSZ':>8}{'ASKSZ':>8}{'V24H':>9}{'OI':>9}{'NET/1':>8}{'FILL/S':>8}")
+    for net, t, b, a, bs, asz, v24, c, fill, queue, oi in rows[:limit]:
         col = GREEN if net > 0 else GREY
         ccol = CYAN if c in PREFERRED_CATEGORIES else GREY
-        fcol = GREEN if fill >= 1.0 else YELLOW if fill >= 0.3 else GREY
-        print(f"{t[:39]:<40}{ccol}{c[:14]:<15}{RESET}{_px(b) + 'c':>7}"
+        fcol = GREEN if fill >= 2.0 else YELLOW if fill >= 0.5 else GREY
+        print(f"{t[:37]:<38}{ccol}{c[:13]:<14}{RESET}{_px(b) + 'c':>7}"
               f"{_px(a) + 'c':>7}{_px(a - b) + 'c':>6}"
-              f"{_sz(bs):>8}{_sz(asz):>8}{n:>5.0f}{col}{net:>+7.1f}c{RESET}"
-              f"{fcol}{fill:>7.1f}{RESET}")
-    print(f"\n{DIM}NET/1 = half-spread captured as maker, minus the taker fee to "
+              f"{_sz(bs):>8}{_sz(asz):>8}{v24:>9,.0f}{oi:>9,.0f}"
+              f"{col}{net:>+7.1f}c{RESET}{fcol}{fill:>8.1f}{RESET}")
+    print(f"\n{DIM}NET/1  = half-spread captured as maker, minus the taker fee to "
           f"flatten 1 contract.\n"
-          f"FILL  = edge x sqrt(trades) / queue ahead of you. Higher is a wider,\n"
-          f"        livelier, shallower book — the three things you need at once.\n"
-          f"        Green (>1.0) should fill inside a 15-minute session.\n"
-          f"Sports/Crypto excluded; --sports includes them, "
-          f"--only Elections,Politics narrows further.{RESET}")
+          f"V24H   = contracts traded in the last 24h. This, not the TRD count "
+          f"this tool\n         used to print, is the real signal: the "
+          f"exchange-wide trade feed spans\n         only ~40 SECONDS, so a "
+          f"market that prints 30x/day shows 0 trades in it.\n"
+          f"FILL/S = expected contracts YOU trade in a {SESSION_MINUTES:.0f}-minute "
+          f"session, given the queue\n         resting ahead of you. Green "
+          f"(>2) means a fill is likely; grey means\n         you will sit "
+          f"there watching.\n"
+          f"Sports/Crypto excluded; --sports includes them, --only "
+          f"Elections,Politics narrows,\n--min-vol N requires N contracts of "
+          f"24h volume.{RESET}")
     return [r[1] for r in rows[:limit]]
 
 
@@ -439,7 +475,9 @@ def _main():
             series = FOCUS_SERIES
         if "--series" in argv:
             series = [s.strip() for s in argv[argv.index("--series") + 1].split(",")]
-        scan(client, include_sports="--sports" in argv, only=only, series=series)
+        min_vol = float(argv[argv.index("--min-vol") + 1]) if "--min-vol" in argv else 0
+        scan(client, include_sports="--sports" in argv, only=only, series=series,
+             min_vol=min_vol)
         return
 
     if not positional:

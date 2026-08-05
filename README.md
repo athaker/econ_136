@@ -201,11 +201,29 @@ python book_viewer.py --scan --series KXTRUMPSAY        # one family
 python book_viewer.py --scan --sports                   # put sports back
 ```
 
-Results are ranked by **`FILL`** — `edge × √trades ÷ queue ahead of you` — because
-three things must be true at once to trade on stage: there is edge to capture,
-the market prints, and the queue is short enough to reach the front of. Green
-(`> 1.0`) should fill inside a 15-minute session. Category is a tiebreak, not a
-reason to show an unfillable penny-wide market first.
+### Will it actually trade? Read these two columns
+
+| Column | Meaning |
+|---|---|
+| **`NET/1`** | Half-spread captured as maker, minus the taker fee to flatten 1 contract. **Is there edge?** |
+| **`V24H`** | Contracts traded in the last 24h. **Does anyone trade this?** |
+| **`FILL/S`** | Expected contracts *you* trade in one 15-min session, given the queue ahead of you. Green (`>2`) means a fill is likely. |
+
+You need `NET/1 > 0` **and** `FILL/S` green. They pull against each other, and
+seeing that is the point:
+
+```
+KXWTI-26AUG0514-T74.99    1c wide   V24H 64,342   NET -0.5c   FILL/S 111.7  <- trades constantly, no edge
+KXWMTFT-26AUG08-T1220    30c wide   V24H    216   NET +13.0c  FILL/S   0.8  <- great edge, nobody trades
+KXRAIN-26AUG05-NOLA       7c wide   V24H  5,029   NET  +1.5c  FILL/S   3.3  <- the one worth quoting
+```
+
+Use `--min-vol 500` to drop markets that don't trade enough to matter.
+
+**Why `V24H` and not a trade count:** the exchange-wide trade feed this scanner
+reads spans only about **40 seconds**. A market that prints 30×/day shows *zero*
+trades in that window. An earlier version of this tool scored on that count and
+systematically buried exactly the markets worth quoting.
 
 `--focus` scans the **Mentions** families (`KXTRUMPMENTION`, `KXTRUMPSAY`,
 `KXMAMDANIMENTION`, `KXFOXNEWSMENTION`) by enumerating their series directly.
@@ -244,6 +262,28 @@ All knobs are at the top of `kalshi-market-making-demo.py`:
 | `BALANCE_RESERVE` | 0.25 | Dollars kept unencumbered |
 | `STARTER_CROSS` | False | v2 crossed the spread for a guaranteed opening fill |
 | `DRY_RUN` | False | Print orders instead of sending |
+
+### Running several markets at once
+
+Run one process per market, **each in its own terminal window** — the ladder
+repaints with a screen-clear, so two in the same pane will fight over it.
+
+Give each instance its own slice of the account with `--budget`:
+
+```bash
+python kalshi-market-making-demo.py TICKER_A --budget 1.00   # terminal 1
+python kalshi-market-making-demo.py TICKER_B --budget 1.00   # terminal 2
+```
+
+**This is required, not optional.** Every instance reads the same account
+balance and, without `--budget`, sizes as if it owned all of it — so two
+instances on $2.40 each conclude they can post two lots, and whichever gets
+there second has its orders rejected for insufficient collateral. `--budget`
+caps how much *this* instance will tie up; the real balance still binds on top
+of it, so an absurd `--budget 99` cannot overdraw you.
+
+One `python flatten.py` at the end cleans up after all of them — it sweeps
+every ticker, not just one.
 
 ### Sizing for a tiny account
 

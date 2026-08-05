@@ -70,6 +70,15 @@ FAIR_TRUST = 0.6            # shrink the microprice toward the plain mid; the
 
 BALANCE_RESERVE = 0.25      # dollars kept unencumbered as a buffer
 
+# Running several markets at once: each instance reads the SAME account balance
+# and would size as if it owned all of it, so two instances on $2.40 both think
+# they can post two lots and the second one's orders get rejected. Give each
+# instance its own slice with --budget, e.g.
+#     python kalshi-market-making-demo.py TICKER_A --budget 1.00
+#     python kalshi-market-making-demo.py TICKER_B --budget 1.00
+# Each still refuses to exceed the real balance; this only caps it further.
+MAX_COLLATERAL = None       # dollars this instance may tie up (None = all)
+
 # v2 had STARTER_CROSS, which crossed the spread once at launch to guarantee a
 # visible fill on stage. It is gone rather than disabled: it is a deliberate
 # taker loss every run, and on a small account that is real money. The lean
@@ -224,6 +233,8 @@ def affordable_size(qbid, qask, balance):
     """
     per_lot = qbid / 1000.0 + (1000 - qask) / 1000.0
     usable = max(0.0, balance - BALANCE_RESERVE)
+    if MAX_COLLATERAL is not None:
+        usable = min(usable, MAX_COLLATERAL)   # our slice when running several
     return int(usable // per_lot) if per_lot > 0 else 0
 
 
@@ -451,6 +462,10 @@ if __name__ == "__main__":
     if "--dry-run" in argv:
         DRY_RUN = True
         argv.remove("--dry-run")
+    if "--budget" in argv:
+        i = argv.index("--budget")
+        MAX_COLLATERAL = float(argv[i + 1])
+        del argv[i:i + 2]
 
     if not KEY_ID:
         print("Set KALSHI_ACCESS_KEY (your key ID from Kalshi Settings -> API) "
@@ -474,6 +489,7 @@ if __name__ == "__main__":
     positional = [a for a in argv if not a.startswith("--")]
     if not positional:
         print("Usage: python kalshi-market-making-demo.py TICKER [--dry-run]\n"
+              "       python kalshi-market-making-demo.py TICKER --budget 1.00\n"
               "       python kalshi-market-making-demo.py --scan [--focus]\n\n"
               "No default ticker: any hard-coded market goes stale. Run --scan.")
         sys.exit(1)
